@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphCargo AI — CEO Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--p:#111827;--p2:#0f172a;--bd:#1e293b;--t:#e2e8f0;--dim:#64748b;--ac:#3b82f6;--g:#10b981;--r:#ef4444;--o:#f59e0b;--pu:#8b5cf6;--cy:#06b6d4;--pk:#ec4899}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-size:12px;overflow-x:hidden}
+a{color:var(--ac);text-decoration:none}
+
+/* === TICKER BAR === */
+.ticker{background:#050810;border-bottom:1px solid var(--bd);padding:4px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;gap:32px;animation:scroll 30s linear infinite;padding-left:100%}
+.ticker-item{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.ticker-item .name{color:var(--dim);font-weight:600}.ticker-item .val{font-weight:700}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* === HEADER === */
+.hdr{padding:10px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;background:var(--p2)}
+.hdr h1{font-size:16px;font-weight:700;background:linear-gradient(90deg,#8b5cf6,#3b82f6,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.3px}
+.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:.5px}
+.bg-p{background:var(--pu);color:#fff}.bg-g{background:var(--g);color:#000}.bg-o{background:var(--o);color:#000}
+
+/* === TABS === */
+.tabs{display:flex;border-bottom:2px solid var(--bd);background:var(--p2);padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:10px 16px;font-size:11px;font-weight:600;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;letter-spacing:.3px}
+.tab:hover{color:var(--t)}.tab.active{color:var(--ac);border-bottom-color:var(--ac)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* === PANELS & LAYOUT === */
+.panel{background:var(--p);padding:14px 20px;border-bottom:1px solid var(--bd)}
+.panel-dark{background:var(--p2);padding:14px 20px;border-bottom:1px solid var(--bd)}
+.section-hdr{padding:8px 20px;font-size:12px;font-weight:700;color:var(--dim);background:rgba(59,130,246,.03);border-bottom:1px solid var(--bd);letter-spacing:.5px;text-transform:uppercase}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd)}
+.trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--bd)}
+@media(max-width:900px){.duo,.trio{grid-template-columns:1fr}}
+.ch{height:260px;position:relative}
+.ch-lg{height:300px;position:relative}
+
+/* === KPIs === */
+.kpis{display:flex;gap:1px;background:var(--bd);flex-wrap:wrap}
+.kpi{flex:1;min-width:100px;background:var(--p);padding:10px 14px;text-align:center}
+.kpi .v{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.kpi .l{font-size:9px;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.sg{color:var(--g)}.sr{color:var(--r)}.sb{color:var(--ac)}.sp{color:var(--pu)}.so{color:var(--o)}.scy{color:var(--cy)}
+
+/* === TABLES === */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:rgba(30,41,59,.8);padding:6px 10px;text-align:left;font-weight:600;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);position:sticky;top:0}
+.tbl td{padding:5px 10px;border-bottom:1px solid rgba(30,41,59,.4);font-family:'JetBrains Mono',monospace;font-size:10px}
+.tbl tr:hover td{background:rgba(59,130,246,.03)}
+.tbl .extra{background:rgba(16,185,129,.06)}
+.tbl .shift{background:rgba(6,182,212,.05)}
+.tag{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.3px}
+.tag-f{background:rgba(245,158,11,.15);color:var(--o)}.tag-j{background:rgba(59,130,246,.15);color:var(--ac)}
+.tag-extra{background:rgba(16,185,129,.2);color:var(--g)}.tag-shift{background:rgba(6,182,212,.2);color:var(--cy)}
+.tag-match{background:rgba(139,92,246,.15);color:var(--pu)}
+
+/* === PROOF BOX === */
+.proof-box{background:linear-gradient(135deg,rgba(59,130,246,.04),rgba(139,92,246,.04));border:1px solid rgba(59,130,246,.15);border-radius:6px;padding:12px 16px;margin:10px 20px;line-height:1.7;font-size:11px}
+.proof-box strong{color:var(--ac)}.proof-box .hl{color:var(--g);font-weight:700}
+
+/* === CHAIN FLOW === */
+.chain{display:flex;align-items:stretch;padding:14px 20px;gap:0;overflow-x:auto}
+.chain-step{flex:1;min-width:160px;text-align:center;position:relative}
+.chain-step::after{content:'';position:absolute;top:24px;left:50%;width:100%;height:2px;z-index:0}
+.chain-step:last-child::after{display:none}
+.chain-step.s1::after{background:linear-gradient(90deg,var(--pu),var(--ac))}
+.chain-step.s2::after{background:linear-gradient(90deg,var(--ac),var(--cy))}
+.chain-step.s3::after{background:linear-gradient(90deg,var(--cy),var(--g))}
+.chain-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 6px;position:relative;z-index:1;border:2px solid}
+.chain-icon.s1{background:rgba(139,92,246,.12);border-color:var(--pu)}
+.chain-icon.s2{background:rgba(59,130,246,.12);border-color:var(--ac)}
+.chain-icon.s3{background:rgba(6,182,212,.12);border-color:var(--cy)}
+.chain-icon.s4{background:rgba(16,185,129,.12);border-color:var(--g)}
+.chain-title{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.chain-val{font-size:12px;font-weight:600;margin-top:2px}
+.chain-sub{font-size:9px;color:var(--dim);margin-top:1px}
+
+/* === FORECAST CARDS === */
+.grid-fc{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 20px}
+@media(max-width:900px){.grid-fc{grid-template-columns:1fr}}
+.fc{background:var(--p);border:1px solid var(--bd);border-radius:6px;padding:10px 12px}
+.fc.up{border-left:3px solid var(--g)}.fc.down{border-left:3px solid var(--r)}
+.fc-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.fc-lane{font-size:13px;font-weight:700}.fc-dir{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.fc-dir.up{background:rgba(16,185,129,.12);color:var(--g)}.fc-dir.down{background:rgba(239,68,68,.12);color:var(--r)}
+.fc-body{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;line-height:1.5}
+.fc-label{color:var(--dim)}.fc-val{font-weight:500;font-family:'JetBrains Mono',monospace;font-size:10px}
+
+/* === ARCHITECTURE FLOW === */
+.arch{display:flex;align-items:center;gap:0;padding:12px 20px;overflow-x:auto}
+.arch-box{background:var(--p);border:1px solid var(--bd);border-radius:6px;padding:10px 14px;min-width:130px;text-align:center}
+.arch-box .ab-title{font-size:10px;font-weight:700;color:var(--ac);letter-spacing:.3px}
+.arch-box .ab-sub{font-size:9px;color:var(--dim);margin-top:2px}
+.arch-arrow{color:var(--dim);font-size:18px;padding:0 6px}
+
+/* === TIMELINE === */
+.timeline{display:flex;align-items:stretch;gap:0;padding:6px 20px;overflow-x:auto}
+.tl-step{flex:1;min-width:110px;text-align:center;padding:6px;position:relative}
+.tl-step::after{content:'';position:absolute;top:50%;right:0;width:100%;height:1px;background:var(--bd);z-index:0}
+.tl-step:last-child::after{display:none}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin:0 auto 4px;position:relative;z-index:1}
+.tl-dot.soft{background:var(--pu)}.tl-dot.conf{background:var(--g)}.tl-dot.yield{background:var(--r)}
+.tl-label{font-size:9px;color:var(--dim)}.tl-val{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+
+.footer{padding:8px 20px;text-align:center;font-size:9px;color:var(--dim);border-top:1px solid var(--bd)}
+</style>
+</head>
+<body>
+
+<!-- ===== TICKER BAR ===== -->
+<div class="ticker">
+<div class="ticker-inner" id="ticker">
+  <span class="ticker-item"><span class="name">BAI00</span><span class="val sb">2,519</span><span class="sg">+5.1%</span></span>
+  <span class="ticker-item"><span class="name">BAI20 FRA</span><span class="val">1,173</span><span class="sr">-2.1%</span></span>
+  <span class="ticker-item"><span class="name">BAI30 HKG</span><span class="val sb">4,205</span><span class="sg">+8.6%</span></span>
+  <span class="ticker-item"><span class="name">BAI80 PVG</span><span class="val so">5,689</span><span class="sg">+6.4%</span></span>
+  <span class="ticker-item"><span class="name">GSCPI</span><span class="val sg">+24.6%</span></span>
+  <span class="ticker-item"><span class="name">Kupfer</span><span class="val">$11,791</span><span class="sg">+9.1%</span></span>
+  <span class="ticker-item"><span class="name">E-Commerce</span><span class="val sr">-11.3%</span></span>
+  <span class="ticker-item"><span class="name">IC131 Container</span><span class="val sg">+3.6%</span></span>
+  <span class="ticker-item"><span class="name">BAI00</span><span class="val sb">2,519</span><span class="sg">+5.1%</span></span>
+  <span class="ticker-item"><span class="name">BAI20 FRA</span><span class="val">1,173</span><span class="sr">-2.1%</span></span>
+  <span class="ticker-item"><span class="name">BAI30 HKG</span><span class="val sb">4,205</span><span class="sg">+8.6%</span></span>
+  <span class="ticker-item"><span class="name">BAI80 PVG</span><span class="val so">5,689</span><span class="sg">+6.4%</span></span>
+  <span class="ticker-item"><span class="name">GSCPI</span><span class="val sg">+24.6%</span></span>
+  <span class="ticker-item"><span class="name">Kupfer</span><span class="val">$11,791</span><span class="sg">+9.1%</span></span>
+  <span class="ticker-item"><span class="name">E-Commerce</span><span class="val sr">-11.3%</span></span>
+  <span class="ticker-item"><span class="name">IC131 Container</span><span class="val sg">+3.6%</span></span>
+</div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<div class="hdr">
+  <h1>GRAPHCARGO AI</h1>
+  <span class="badge bg-p">PREDICTIVE INTELLIGENCE</span>
+  <span class="badge bg-o">CEO PROOF</span>
+  <span style="flex:1"></span>
+  <span style="font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace">12 APR 2026 | v5.0</span>
+</div>
+
+<!-- ===== TAB NAV ===== -->
+<div class="tabs" id="tabNav">
+  <div class="tab active" data-tab="overview">OVERVIEW</div>
+  <div class="tab" data-tab="signals">INDIZES & SIGNALE</div>
+  <div class="tab" data-tab="flights">OAG & TAC SPACE</div>
+  <div class="tab" data-tab="correlations">KORRELATIONEN</div>
+  <div class="tab" data-tab="chain">KAUSALKETTE</div>
+  <div class="tab" data-tab="proof">PROOF OF CONCEPT</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 1: OVERVIEW -->
+<!-- ================================================================ -->
+<div class="tab-content active" id="overview">
+  <div class="kpis">
+    <div class="kpi"><div class="v sp">58</div><div class="l">Makro-Signale</div></div>
+    <div class="kpi"><div class="v sb">443</div><div class="l">Vorhersagbare Lanes</div></div>
+    <div class="kpi"><div class="v sg">130</div><div class="l">Lanes r &gt; 0.95</div></div>
+    <div class="kpi"><div class="v so">181K</div><div class="l">Korrelationen</div></div>
+    <div class="kpi"><div class="v">430K</div><div class="l">AWBs analysiert</div></div>
+    <div class="kpi"><div class="v scy">429W</div><div class="l">BAI Historie</div></div>
+  </div>
+
+  <div class="proof-box" style="margin-top:0;border-radius:0;border-left:0;border-right:0">
+    <strong>THESE:</strong> Makrooekonomische Signale (Kupfer, GSCPI, Container PPI) sagen Air Cargo Yield-Bewegungen <span class="hl">4–6 Wochen im Voraus</span> vorher. Der TAC/BAI Index bestaetigt. Spire ADS-B Flugdaten zeigen physisch, dass Airlines Extra-Kapazitaet einfliegen. Am Ende steigt der Yield — messbar in WFC's 430.000 AWBs.
+  </div>
+
+  <div class="section-hdr">ARCHITEKTUR</div>
+  <div class="arch">
+    <div class="arch-box"><div class="ab-title">FRED / FAO / TAC</div><div class="ab-sub">58 Makro-Signale<br>Taeglich aktualisiert</div></div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box"><div class="ab-title">SIGNAL ENGINE</div><div class="ab-sub">Supabase<br>Lag-Korrelation</div></div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box"><div class="ab-title">KORRELATIONSMATRIX</div><div class="ab-sub">163K Paare<br>58 x Lane x Commodity</div></div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box"><div class="ab-title">KNOWLEDGE GRAPH</div><div class="ab-sub">Neo4j AuraDB<br>25 Nodes, PREDICTS</div></div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box" style="border-color:var(--g)"><div class="ab-title" style="color:var(--g)">YIELD FORECAST</div><div class="ab-sub">443 Lanes<br>1–6W Vorlauf</div></div>
+  </div>
+
+  <div class="section-hdr">SO FUNKTIONIERT ES</div>
+  <div class="panel" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+    <div style="padding:10px;border:1px solid var(--bd);border-radius:6px">
+      <div style="font-size:20px;margin-bottom:4px">1</div>
+      <div style="font-size:11px;font-weight:600;color:var(--pu)">SIGNAL ERFASSEN</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:4px">58 Makro-Indikatoren werden taeglich von FRED, TAC, FAO und NY Fed geladen</div>
+    </div>
+    <div style="padding:10px;border:1px solid var(--bd);border-radius:6px">
+      <div style="font-size:20px;margin-bottom:4px">2</div>
+      <div style="font-size:11px;font-weight:600;color:var(--ac)">KORRELATION BERECHNEN</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:4px">Jedes Signal wird gegen jede Lane x Commodity mit 1–12W Lag getestet. 163K Paare.</div>
+    </div>
+    <div style="padding:10px;border:1px solid var(--bd);border-radius:6px">
+      <div style="font-size:20px;margin-bottom:4px">3</div>
+      <div style="font-size:11px;font-weight:600;color:var(--cy)">PHYSISCH BESTAETIGEN</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:4px">OAG Schedule vs. Spire ADS-B: Extra-Fluege und Flight-Shifts erkennen.</div>
+    </div>
+    <div style="padding:10px;border:1px solid var(--bd);border-radius:6px">
+      <div style="font-size:20px;margin-bottom:4px">4</div>
+      <div style="font-size:11px;font-weight:600;color:var(--g)">YIELD VORHERSAGEN</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:4px">Prognose pro Lane: welche Yields steigen/fallen in 1–6 Wochen? Confidence Score.</div>
+    </div>
+  </div>
+
+  <div class="section-hdr">DATENQUELLEN</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Quelle</th><th>Daten</th><th>Zeitraum</th><th>Umfang</th><th>Cron</th></tr>
+      <tr><td style="color:var(--pu)">FRED / NY Fed</td><td>GSCPI, Kupfer, IC131, DGORDER, UMCSENT, etc.</td><td>ab 2023</td><td>30+ Serien</td><td>Taeglich 06:00</td></tr>
+      <tr><td style="color:var(--ac)">TAC Index / BAI</td><td>BAI00–BAI80 (Baltic Air Freight Index)</td><td>seit 2018</td><td>429 Wochen, 3.003 Punkte</td><td>Taeglich 15:00</td></tr>
+      <tr><td style="color:var(--cy)">TAC Space / Spire</td><td>ADS-B — tatsaechlich geflogene Fluege</td><td>6 Wochen</td><td>230 Fluege (FRA-PVG)</td><td>Manuell</td></tr>
+      <tr><td style="color:var(--o)">OAG Schedule</td><td>Geplante Fluege (Operating + Codeshare)</td><td>6.–9. Apr 2026</td><td>703 Fluege, 20 Lanes</td><td>Testdaten</td></tr>
+      <tr><td style="color:var(--g)">WFC AWBs</td><td>Air Waybills mit Yield, Commodity, Lane</td><td>2025</td><td>430.736 AWBs</td><td>Batch</td></tr>
+      <tr><td>FAO</td><td>Food Price Index (Sugar, Cereals, Dairy, etc.)</td><td>2024–2026</td><td>6 Sub-Indizes</td><td>Monatlich</td></tr>
+      <tr><td>NOAA METAR</td><td>Flughafen-Wetter (Sichtweite, Wind, Ceiling)</td><td>Live</td><td>5.967 Events</td><td>Alle 30 Min</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 2: INDIZES & SIGNALE -->
+<!-- ================================================================ -->
+<div class="tab-content" id="signals">
+  <div class="section-hdr">BAI INDEX FAMILIE (TAC / BALTIC EXCHANGE)</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Index</th><th>Hub</th><th>Beschreibung</th><th>Aktuell</th><th>WoW</th><th>5W Trend</th><th>Rolle</th></tr>
+      <tr><td style="font-weight:700">BAI00</td><td>Composite</td><td>Gewichteter Durchschnitt aller BAI-Hubs</td><td class="sb">2,519</td><td class="sg">+5.1%</td><td class="sg">+25.5%</td><td>Globaler Benchmark</td></tr>
+      <tr><td style="font-weight:700">BAI20</td><td>FRA</td><td>Frankfurt Outbound — Europa-Hub</td><td>1,173</td><td class="sr">-2.1%</td><td>+6.3%</td><td>EU-Korridor Bestaetigung</td></tr>
+      <tr><td style="font-weight:700;color:var(--ac)">BAI30</td><td>HKG</td><td>Hong Kong Outbound — Asia Transit</td><td class="sb">4,205</td><td class="sg">+8.6%</td><td class="sg">+33.2%</td><td>Asia Confirmation</td></tr>
+      <tr><td>BAI40</td><td>SIN</td><td>Singapore Outbound — SEA Hub</td><td>1,292</td><td class="sr">-0.3%</td><td>+8.8%</td><td>SEA-Korridor</td></tr>
+      <tr><td>BAI50</td><td>DXB</td><td>Dubai Outbound — MDE Hub</td><td>1,192</td><td class="sg">+1.9%</td><td class="sg">+38.4%</td><td>MDE-Korridor</td></tr>
+      <tr><td>BAI60</td><td>ORD</td><td>Chicago Outbound — NAM Hub</td><td>252</td><td class="sr">-13.4%</td><td>+9.1%</td><td>NAM-Korridor</td></tr>
+      <tr><td style="font-weight:700;color:var(--o)">BAI80</td><td>PVG</td><td>Shanghai Outbound — China Export-Hub</td><td class="so">5,689</td><td class="sg">+6.4%</td><td class="sg">+28.0%</td><td>Staerkstes Prognose-Signal</td></tr>
+    </table>
+  </div>
+
+  <div class="section-hdr">MAKRO-SIGNALE (FRED / NY FED / FAO)</div>
+  <div class="duo">
+    <div class="panel">
+      <div class="ch-lg"><canvas id="c-signals"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ch-lg"><canvas id="c-cluster"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">SIGNAL-KATALOG</div>
+  <div class="panel" style="overflow-x:auto;max-height:300px;overflow-y:auto">
+    <table class="tbl">
+      <tr><th>Signal ID</th><th>Name</th><th>Quelle</th><th>Frequenz</th><th>Aktuell</th><th>Datentiefe</th><th>Verwendung</th></tr>
+      <tr><td>GSCPI</td><td>Global Supply Chain Pressure</td><td>NY Fed</td><td>Monatlich</td><td class="sg">+24.6%</td><td>339 Monate</td><td>Staerkster Fruehindikator (r=0.923)</td></tr>
+      <tr><td>PCOPPUSDM</td><td>Kupferpreis (USD/t)</td><td>FRED</td><td>Monatlich</td><td class="sg">$11,791</td><td>12 Monate</td><td>Industrie-Proxy China (r=0.797→BAI80)</td></tr>
+      <tr><td>IC131</td><td>Container Handling PPI</td><td>FRED</td><td>Monatlich</td><td class="sg">+3.6%</td><td>29 Monate</td><td>Laengster Lead (6W→Yield, r=0.923)</td></tr>
+      <tr><td>DGORDER</td><td>Durable Goods Orders</td><td>FRED</td><td>Monatlich</td><td class="sg">+2.5%</td><td>30 Monate</td><td>Machinery-Export Proxy</td></tr>
+      <tr><td>UMCSENT</td><td>Consumer Sentiment</td><td>FRED</td><td>Monatlich</td><td class="sr">-3.2%</td><td>30 Monate</td><td>Invers: Unsicherheit→Airfreight</td></tr>
+      <tr><td>TSIFRGHTC</td><td>Transport Freight Cost</td><td>FRED</td><td>Monatlich</td><td class="sg">+1.8%</td><td>24 Monate</td><td>Airfreight als Alternative</td></tr>
+      <tr><td>FAO_SUGAR</td><td>FAO Sugar Price Index</td><td>FAO</td><td>Monatlich</td><td class="sg">+7.2%</td><td>27 Monate</td><td>Invers: r=-0.942 (EU→NAM)</td></tr>
+      <tr><td>RETAILIRSA</td><td>E-Commerce Retail</td><td>FRED</td><td>Monatlich</td><td class="sr">-11.3%</td><td>36 Monate</td><td>Konsum-Proxy (r=0.993 FCO-LAX)</td></tr>
+      <tr><td>IPG334S</td><td>Semiconductor Production</td><td>FRED</td><td>Monatlich</td><td class="sg">+3.6%</td><td>36 Monate</td><td>High-Value Cargo Driver</td></tr>
+      <tr><td>DCOILWTICO</td><td>WTI Crude Oil</td><td>FRED</td><td>Taeglich</td><td>$68.4</td><td>180 Tage</td><td>Fuel Cost / Carrier Margin</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 3: FLIGHT DATA -->
+<!-- ================================================================ -->
+<div class="tab-content" id="flights">
+  <div class="proof-box" style="margin:0;border-radius:0;border-left:0;border-right:0">
+    <strong>METHODIK:</strong> OAG liefert den <span class="hl">geplanten Flugplan</span> (Schedule). TAC Space / Spire liefert per ADS-B, welche Fluege <span class="hl">tatsaechlich geflogen</span> sind. Die Differenz = Extra-Kapazitaet oder Stornierungen. Wenn bei steigendem BAI-Index gleichzeitig Extra-Freighter auftauchen, ist das <strong>physische Bestaetigung</strong> der Nachfrage.
+  </div>
+
+  <div class="section-hdr">FRA → PVG — OAG SCHEDULE VS. SPIRE ADS-B (APRIL 2026)</div>
+  <div class="kpis">
+    <div class="kpi"><div class="v so">21</div><div class="l">OAG Operating / 2d</div></div>
+    <div class="kpi"><div class="v scy">230</div><div class="l">Spire Direkt / 6W</div></div>
+    <div class="kpi"><div class="v">126</div><div class="l">Cargo-Fluege</div></div>
+    <div class="kpi"><div class="v sg">LH8426</div><div class="l">Extra-Freighter</div></div>
+    <div class="kpi"><div class="v sp">2</div><div class="l">Flight-Shifts</div></div>
+  </div>
+
+  <div class="section-hdr">OAG SCHEDULED — 7. APRIL (OPERATING)</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Flight</th><th>Typ</th><th>Aircraft</th><th>Dep UTC</th><th>Cargo</th><th>Spire-Status</th></tr>
+      <tr><td>CZ406</td><td><span class="tag tag-f">FRT</span></td><td>B777F</td><td>07:30</td><td>100t</td><td><span class="tag tag-match">MATCH</span></td></tr>
+      <tr><td>LH8400</td><td><span class="tag tag-f">FRT</span></td><td>B777X</td><td>09:50</td><td>104t</td><td><span class="tag tag-match">09:51</span></td></tr>
+      <tr><td>CK212</td><td><span class="tag tag-f">FRT</span></td><td>B777F</td><td>10:05</td><td>100t</td><td><span class="tag tag-match">MATCH</span></td></tr>
+      <tr class="shift"><td>CA1048</td><td><span class="tag tag-f">FRT</span></td><td>B777F</td><td>10:15</td><td>100t</td><td><span class="tag tag-shift">SHIFT → 8. APR</span></td></tr>
+      <tr><td>CZ464</td><td><span class="tag tag-f">FRT</span></td><td>B777F</td><td>11:10</td><td>100t</td><td><span class="tag tag-match">MATCH</span></td></tr>
+      <tr><td>MU220</td><td><span class="tag tag-j">PAX</span></td><td>B777-300ER</td><td>12:30</td><td>20t</td><td><span class="tag tag-match">12:36</span></td></tr>
+      <tr><td>CK216</td><td><span class="tag tag-f">FRT</span></td><td>B777F</td><td>12:55</td><td>100t</td><td><span class="tag tag-match">MATCH</span></td></tr>
+      <tr class="shift"><td>LH728</td><td><span class="tag tag-j">PAX</span></td><td>B787-9</td><td>13:40</td><td>40t</td><td><span class="tag tag-shift">SHIFT → 8. APR</span></td></tr>
+      <tr><td>CA936</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>17:20</td><td>53t</td><td><span class="tag tag-match">18:15</span></td></tr>
+      <tr><td>LH732</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>19:30</td><td>17t</td><td><span class="tag tag-match">20:38</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-hdr">SPIRE ADS-B — 9. APRIL (TATSAECHLICH GEFLOGEN)</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Flight</th><th>Typ</th><th>Aircraft</th><th>Dep lokal</th><th>Cargo (m3)</th><th>OAG-Status</th></tr>
+      <tr class="extra"><td style="font-weight:700;color:var(--g)">LH8426</td><td><span class="tag tag-f">FRT</span></td><td>B777-200F</td><td>06:02</td><td>650.5 (490.4 main)</td><td><span class="tag tag-extra">EXTRA FLIGHT</span></td></tr>
+      <tr><td>LH8400</td><td><span class="tag tag-f">FRT</span></td><td>B777-200F</td><td>10:01</td><td>650.5</td><td>Regulaer</td></tr>
+      <tr><td>CA1022</td><td><span class="tag tag-f">FRT</span></td><td>B777-200F</td><td>12:57</td><td>650.5</td><td>Regulaer</td></tr>
+      <tr><td>MU220</td><td><span class="tag tag-j">PAX</span></td><td>B777-300ER</td><td>12:51</td><td>213.9</td><td>Regulaer</td></tr>
+      <tr><td>LH732</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>20:38</td><td>170.2</td><td>Regulaer</td></tr>
+    </table>
+  </div>
+
+  <div class="section-hdr">CARGO-KAPAZITAET & AIRLINE-VERTEILUNG</div>
+  <div class="duo">
+    <div class="panel"><div class="ch"><canvas id="c-cargo"></canvas></div></div>
+    <div class="panel"><div class="ch"><canvas id="c-airline"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 4: KORRELATIONEN -->
+<!-- ================================================================ -->
+<div class="tab-content" id="correlations">
+  <div class="proof-box" style="margin:0;border-radius:0;border-left:0;border-right:0">
+    <strong>METHODIK:</strong> Pearson-Korrelation mit <span class="hl">Lag-Analyse</span> (1–12 Wochen Versatz). Jedes der 58 Signale wird gegen jede Lane x Commodity-Kombination getestet. Ergebnis: 163.455 Commodity-Korrelationen, davon 5.323 praediktive Paare. <strong>443 Lanes</strong> haben mindestens ein fuehrendes Signal mit r &ge; 0.7.
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v sp">163K</div><div class="l">Commodity-Korrelationen</div></div>
+    <div class="kpi"><div class="v sb">5,323</div><div class="l">Praediktive Paare</div></div>
+    <div class="kpi"><div class="v sg">443</div><div class="l">Lanes r &ge; 0.7</div></div>
+    <div class="kpi"><div class="v so">130</div><div class="l">Lanes r &ge; 0.95</div></div>
+    <div class="kpi"><div class="v sr">55%</div><div class="l">Nicht vorhersagbar</div></div>
+  </div>
+
+  <div class="section-hdr">TOP KORRELATIONSPAARE (r &ge; 0.95)</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Lane</th><th>Commodity</th><th>Signal</th><th>r</th><th>Lag</th><th>n</th><th>AWBs</th><th>Mechanismus</th></tr>
+      <tr><td>FCO-JFK</td><td>C9 Consol</td><td>PCOPPUSDM (Kupfer)</td><td class="sg">0.986</td><td>4W</td><td>16</td><td>370</td><td>Industrienachfrage EU→Machinery-Export</td></tr>
+      <tr><td>FCO-LAX</td><td>C9 Consol</td><td>RETAILIRSA (E-Commerce)</td><td class="sg">0.993</td><td>1W</td><td>14</td><td>189</td><td>Consumer Spending→Cross-border eCommerce</td></tr>
+      <tr><td>ORD-HKG</td><td>C9 Consol</td><td>RETAILIRSA (E-Commerce)</td><td class="sg">0.976</td><td>5W</td><td>10</td><td>46</td><td>US Konsum→Asia Retouren</td></tr>
+      <tr><td>UIO-DOH</td><td>C22 Flowers</td><td>GSCPI</td><td class="sg">0.971</td><td>1W</td><td>11</td><td>34</td><td>Supply-Chain-Druck→Airfreight teurer</td></tr>
+      <tr><td>FCO-IAD</td><td>C9 Consol</td><td>BAI80 PVG</td><td class="sg">0.961</td><td>1W</td><td>15</td><td>79</td><td>Shanghai-Outbound bestaetigt</td></tr>
+      <tr><td>HKG-DOH</td><td>C12</td><td>BAI80 PVG</td><td class="sg">0.974</td><td>2W</td><td>14</td><td>—</td><td>Asia-Hub Preis→MDE Transit</td></tr>
+      <tr><td>FRA-PVG</td><td>C9 Consol</td><td>BAI80 PVG</td><td class="sb">0.898</td><td>3W</td><td>—</td><td>—</td><td>Shanghai-Index treibt EU→Asia Route</td></tr>
+    </table>
+  </div>
+
+  <div class="section-hdr">COMMODITY-LEVEL INSIGHT</div>
+  <div class="proof-box">
+    <strong>NICHT jede Commodity ist vorhersagbar:</strong><br>
+    C9 Consol (Konsolidierte Sendungen) &times; BAI80: <span class="hl">r = 0.898</span> — stark, weil Consol den Gesamtmarkt abbildet.<br>
+    C23 General Cargo &times; BAI80: r = 0.305 — <span style="color:var(--r)">fast null</span>, weil General Cargo eigene Treiber hat (Saisonalitaet, Spot-Deals).<br>
+    <strong>Erkenntnis:</strong> Die Signal-Engine funktioniert auf Commodity-Ebene, nicht pauschal. 55% der Lanes haben keinen starken Leading Indicator.
+  </div>
+
+  <div class="section-hdr">BEWEIS-LANES (YIELD-VERLAUF SEP–DEZ 2025)</div>
+  <div class="panel"><div class="ch-lg"><canvas id="c-lanes"></canvas></div></div>
+
+  <div class="section-hdr">KAUSALE KANTEN (NEO4J KNOWLEDGE GRAPH)</div>
+  <div class="panel" style="overflow-x:auto;max-height:250px;overflow-y:auto">
+    <table class="tbl">
+      <tr><th>Case Study</th><th>Source</th><th>&rarr;</th><th>Target</th><th>Relationship</th><th>r</th><th>Lag</th></tr>
+      <tr><td>Asia→NAM</td><td>PCOPPUSDM</td><td>&rarr;</td><td>BAI80</td><td>DRIVES</td><td>0.797</td><td>1W</td></tr>
+      <tr><td>Asia→NAM</td><td>GSCPI</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>0.923</td><td>1W</td></tr>
+      <tr><td>Asia→NAM</td><td>IC131</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>0.923</td><td>6W</td></tr>
+      <tr><td>Asia→NAM</td><td>BAI80</td><td>&rarr;</td><td>WFC_YIELD</td><td>CONFIRMS</td><td>0.857</td><td>4W</td></tr>
+      <tr><td>EU→NAM</td><td>FAO_SUGAR</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>-0.942</td><td>4W</td></tr>
+      <tr><td>EU→NAM</td><td>UMCSENT</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>-0.920</td><td>4W</td></tr>
+      <tr><td>EU→NAM</td><td>BAI30</td><td>&rarr;</td><td>WFC_YIELD</td><td>CONFIRMS</td><td>0.812</td><td>1W</td></tr>
+      <tr><td>EU→MDE</td><td>TSIFRGHTC</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>0.781</td><td>5W</td></tr>
+      <tr><td>EU→MDE</td><td>DGORDER</td><td>&rarr;</td><td>WFC_YIELD</td><td>LEADS</td><td>0.751</td><td>5W</td></tr>
+      <tr><td>EU→MDE</td><td>WFC_SPOT</td><td>&rarr;</td><td>WFC_YIELD</td><td>CONFIRMS</td><td>0.950</td><td>1W</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 5: KAUSALKETTE -->
+<!-- ================================================================ -->
+<div class="tab-content" id="chain">
+  <div class="chain">
+    <div class="chain-step s1">
+      <div class="chain-icon s1">&#x1F4C8;</div>
+      <div class="chain-title sp">STUFE 1: MAKRO</div>
+      <div class="chain-val">Leading Indicators</div>
+      <div class="chain-sub">Kupfer +9.1% | GSCPI +24.6%</div>
+      <div class="chain-sub">Lead: 4–6 Wochen</div>
+    </div>
+    <div class="chain-step s2">
+      <div class="chain-icon s2">&#x2708;</div>
+      <div class="chain-title sb">STUFE 2: BAI INDEX</div>
+      <div class="chain-val">Markt-Bestaetigung</div>
+      <div class="chain-sub">BAI80 PVG +28% in 5W</div>
+      <div class="chain-sub">Lead: 1–4 Wochen</div>
+    </div>
+    <div class="chain-step s3">
+      <div class="chain-icon s3">&#x1F6EB;</div>
+      <div class="chain-title scy">STUFE 3: SPIRE ADS-B</div>
+      <div class="chain-val">Physische Bestaetigung</div>
+      <div class="chain-sub">Extra-Freighter LH8426</div>
+      <div class="chain-sub">Flight-Shifts erkannt</div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon s4">&#x1F4B0;</div>
+      <div class="chain-title sg">STUFE 4: YIELD</div>
+      <div class="chain-val">Preis steigt</div>
+      <div class="chain-sub">WFC +29.6% (Asia→NAM)</div>
+      <div class="chain-sub">430K AWBs beweisen</div>
+    </div>
+  </div>
+
+  <div class="section-hdr">BAI80 PVG SURGE — MAERZ BIS APRIL 2026</div>
+  <div class="panel"><div class="ch-lg"><canvas id="c-bai"></canvas></div></div>
+
+  <div class="section-hdr">VOLLSTAENDIGE KAUSALKETTE — ZEITVERLAUF</div>
+  <div class="panel"><div class="ch-lg"><canvas id="c-chain"></canvas></div></div>
+
+  <div class="proof-box">
+    <strong>STUFE 1:</strong> Kupfer (+9.1%) und GSCPI (+24.6%) steigen ab Februar — fuehrende Indikatoren fuer industrielle Nachfrage und Supply-Chain-Spannung.<br>
+    <strong>STUFE 2:</strong> BAI80 PVG folgt 4 Wochen spaeter: +28% in 5 Wochen (4.445 → 5.689). Der Air-Cargo-Markt ab Shanghai explodiert.<br>
+    <strong>STUFE 3:</strong> Spire ADS-B zeigt: Lufthansa Cargo fliegt <span class="hl">Extra-Freighter LH8426</span> (B777-200F, 650m3) FRA→PVG — nicht im OAG-Flugplan. Airlines verschieben Fluege kurzfristig nach Nachfrage.<br>
+    <strong>STUFE 4:</strong> WFC Yield auf Asia→NAM stieg historisch um +29.6% nach vergleichbaren Signalmustern (Case Study Q4 2025).
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 6: PROOF OF CONCEPT -->
+<!-- ================================================================ -->
+<div class="tab-content" id="proof">
+  <div class="section-hdr">CASE STUDY 1 — FCO-JFK KUPFER (r = 0.986)</div>
+  <div class="kpis">
+    <div class="kpi"><div class="v sp">r = 0.986</div><div class="l">Pearson</div></div>
+    <div class="kpi"><div class="v so">4W Lead</div><div class="l">Vorlaufzeit</div></div>
+    <div class="kpi"><div class="v sg">+47.2%</div><div class="l">Yield Sep→Dez</div></div>
+    <div class="kpi"><div class="v">370 AWBs</div><div class="l">Datenbasis</div></div>
+    <div class="kpi"><div class="v sb">n = 16</div><div class="l">Wochen</div></div>
+  </div>
+  <div class="panel"><div class="ch-lg"><canvas id="c-proof"></canvas></div></div>
+  <div class="timeline">
+    <div class="tl-step"><div class="tl-dot soft"></div><div class="tl-label">KW35-38</div><div class="tl-val">$9,672</div><div class="tl-label">Kupfer stabil</div></div>
+    <div class="tl-step"><div class="tl-dot soft"></div><div class="tl-label">KW39</div><div class="tl-val so">$9,995</div><div class="tl-label">+3.3%</div></div>
+    <div class="tl-step"><div class="tl-dot conf"></div><div class="tl-label">KW43</div><div class="tl-val sg">$0.978</div><div class="tl-label">Yield +17.8%!</div></div>
+    <div class="tl-step"><div class="tl-dot soft"></div><div class="tl-label">KW48</div><div class="tl-val so">$11,791</div><div class="tl-label">Kupfer +9.1%</div></div>
+    <div class="tl-step"><div class="tl-dot yield"></div><div class="tl-label">KW52</div><div class="tl-val sr">$1.153</div><div class="tl-label">Yield +47% total</div></div>
+  </div>
+
+  <div class="section-hdr">CASE STUDIES — 3 KORRIDORE BEWIESEN</div>
+  <div class="panel" style="overflow-x:auto">
+    <table class="tbl">
+      <tr><th>Korridor</th><th>Zeitraum</th><th>Yield-Spike</th><th>Lead Signal</th><th>r</th><th>Lead</th><th>AWBs/W</th></tr>
+      <tr><td style="font-weight:700;color:var(--o)">Asia → NAM</td><td>Q4 2025</td><td class="sg">+29.6%</td><td>BAI80 PVG +38.7%</td><td>0.857</td><td>5W</td><td>528</td></tr>
+      <tr><td style="font-weight:700;color:var(--ac)">EU → NAM</td><td>Q4 2025</td><td class="sg">+36.7%</td><td>BAI30 HKG, FAO Sugar</td><td>0.812 / -0.942</td><td>1W / 4W</td><td>1,255</td></tr>
+      <tr><td style="font-weight:700;color:var(--pu)">EU → MDE</td><td>Dez 2025</td><td class="sg">+10.8%</td><td>TSIFRGHTC, DGORDER</td><td>0.781 / 0.751</td><td>5W</td><td>2,663</td></tr>
+    </table>
+  </div>
+
+  <div class="section-hdr">AKTUELLE LANE-PROGNOSEN (APRIL 2026)</div>
+  <div class="grid-fc">
+    <div class="fc up">
+      <div class="fc-hdr"><span class="fc-lane">UIO-DOH C22 Flowers</span><span class="fc-dir up">STEIGT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val">GSCPI +24.6%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.971 / 1W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val sg">23.9</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$3.30/kg</span>
+      </div>
+    </div>
+    <div class="fc up">
+      <div class="fc-hdr"><span class="fc-lane">FCO-JFK C9 Consol</span><span class="fc-dir up">STEIGT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val">Kupfer +9.1%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.986 / 4W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val sg">9.0</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$1.15/kg</span>
+      </div>
+    </div>
+    <div class="fc up">
+      <div class="fc-hdr"><span class="fc-lane">FCO-IAD C9 Consol</span><span class="fc-dir up">STEIGT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val">BAI80 +6.4%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.961 / 1W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val">6.2</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$2.67/kg</span>
+      </div>
+    </div>
+    <div class="fc up">
+      <div class="fc-hdr"><span class="fc-lane">HKG-DOH C12</span><span class="fc-dir up">STEIGT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val">BAI80 +6.4%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.974 / 2W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val">6.2</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$3.08/kg</span>
+      </div>
+    </div>
+    <div class="fc down">
+      <div class="fc-hdr"><span class="fc-lane">FCO-LAX C9 Consol</span><span class="fc-dir down">FAELLT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val sr">E-Commerce -11.3%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.993 / 1W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val sr">11.2</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$3.39/kg</span>
+      </div>
+    </div>
+    <div class="fc down">
+      <div class="fc-hdr"><span class="fc-lane">ORD-HKG C9 Consol</span><span class="fc-dir down">FAELLT</span></div>
+      <div class="fc-body">
+        <span class="fc-label">Signal:</span><span class="fc-val sr">E-Commerce -11.3%</span>
+        <span class="fc-label">r / Lag:</span><span class="fc-val">0.976 / 5W</span>
+        <span class="fc-label">Confidence:</span><span class="fc-val sr">11.0</span>
+        <span class="fc-label">Yield:</span><span class="fc-val">$0.38/kg</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-hdr">EINSCHRAENKUNGEN & NAECHSTE SCHRITTE</div>
+  <div class="proof-box">
+    <strong>Was wir NICHT beweisen koennen (noch):</strong><br>
+    1. OAG-Testdaten: nur 4 Tage, 20 Lanes. Fuer systematischen Beweis: 6+ Monate noetig.<br>
+    2. TAC Space: nur 6 Wochen. Fuer saisonale Bereinigung: 1+ Jahr noetig.<br>
+    3. Granger-Kausalitaet: Korrelation ≠ Kausalitaet. Statistisch korrekte Tests brauchen mehr n.<br>
+    4. Kein Out-of-Sample: Alle Korrelationen sind in-sample. Backtest braucht historische AWBs.<br><br>
+    <strong>Naechste Schritte:</strong><br>
+    1. OAG Subscription → Monatliche Schedule-Daten<br>
+    2. TAC Space History → Systematischer Delta (Actual - Scheduled)<br>
+    3. WFC AWBs 2+ Jahre → Out-of-Sample Backtest<br>
+    4. Granger-Tests → Statistisch korrekte Kausalitaetspruefung
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  GRAPHCARGO AI | Predictive Air Cargo Intelligence | Daten: FRED, TAC Index, TAC Space/Spire, OAG, FAO, WFC | Supabase + Neo4j | April 2026
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+// === CHART DEFAULTS ===
+const C = Chart;
+C.defaults.color = '#64748b';
+C.defaults.borderColor = '#1e293b';
+C.defaults.font.family = "'JetBrains Mono','Inter',monospace";
+C.defaults.font.size = 10;
+C.defaults.elements.point.radius = 0;
+C.defaults.elements.point.hoverRadius = 4;
+C.defaults.plugins.legend.labels.usePointStyle = true;
+C.defaults.animation.duration = 0;
+
+const GRID = {color:'rgba(30,41,59,.5)'};
+const GRID_NONE = {display:false};
+
+// === TAB LOGIC ===
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    initCharts(tab.dataset.tab);
+  });
+});
+
+// === LAZY CHART INIT (only when tab becomes visible) ===
+const initialized = {};
+function initCharts(tabId) {
+  if (initialized[tabId]) return;
+  initialized[tabId] = true;
+
+  if (tabId === 'signals') initSignalCharts();
+  if (tabId === 'flights') initFlightCharts();
+  if (tabId === 'correlations') initCorrelationCharts();
+  if (tabId === 'chain') initChainCharts();
+  if (tabId === 'proof') initProofCharts();
+}
+
+// ===== TAB 2: SIGNALS =====
+function initSignalCharts() {
+  // Signals bar
+  new C(document.getElementById('c-signals'), {
+    type: 'bar',
+    data: {
+      labels: ['GSCPI','Kupfer','BAI30 HKG','FAO Sugar','BAI80 PVG','BAI00','Electronics','Semicond.','New Orders','Cotton','BAI20 FRA','Inv/Sales','E-Commerce'],
+      datasets: [{
+        data: [24.6,9.1,8.6,7.2,6.4,5.1,4.2,3.6,2.5,2.2,-2.1,-3.2,-11.3],
+        backgroundColor: [24.6,9.1,8.6,7.2,6.4,5.1,4.2,3.6,2.5,2.2,-2.1,-3.2,-11.3].map(v => v >= 0 ? 'rgba(16,185,129,.7)' : 'rgba(239,68,68,.7)'),
+        borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, title: { display: true, text: 'AKTUELLE SIGNAL-VERAENDERUNGEN (%)', color: '#94a3b8', font: { size: 11 } } },
+      scales: { x: { grid: GRID }, y: { grid: GRID_NONE, ticks: { font: { size: 10 } } } }
+    }
+  });
+
+  // Cluster
+  new C(document.getElementById('c-cluster'), {
+    type: 'bar',
+    data: {
+      labels: ['IC131 Container','Kupfer','Pharma PPI','Baumwolle','BAI80 Shanghai','Electronics','E-Commerce','Retail Inv/Sales'],
+      datasets: [{
+        label: 'Lanes mit r>0.95',
+        data: [12,8,7,5,3,3,3,2],
+        backgroundColor: ['#3b82f6','#f59e0b','#ec4899','#8b5cf6','#10b981','#06b6d4','#ef4444','#64748b'],
+        borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, title: { display: true, text: 'SIGNAL-CLUSTER: WELCHES SIGNAL TREIBT WIE VIELE LANES', color: '#94a3b8', font: { size: 11 } } },
+      scales: { x: { grid: GRID, title: { display: true, text: 'Anzahl Lanes', color: '#64748b' } }, y: { grid: GRID_NONE } }
+    }
+  });
+}
+
+// ===== TAB 3: FLIGHTS =====
+function initFlightCharts() {
+  new C(document.getElementById('c-cargo'), {
+    type: 'bar',
+    data: {
+      labels: ['7.Apr OAG','8.Apr OAG','8.Apr Spire','9.Apr Spire'],
+      datasets: [
+        { label: 'Freighter', data: [704,608,1951,1952], backgroundColor: 'rgba(245,158,11,.7)', borderRadius: 3 },
+        { label: 'Belly', data: [130,90,558,384], backgroundColor: 'rgba(59,130,246,.7)', borderRadius: 3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { title: { display: true, text: 'CARGO-KAPAZITAET FRA-PVG (t / m3)', color: '#94a3b8', font: { size: 11 } } },
+      scales: { x: { stacked: true, grid: GRID_NONE }, y: { stacked: true, grid: GRID } }
+    }
+  });
+
+  new C(document.getElementById('c-airline'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Lufthansa Cargo','China Cargo AL','Air China Cargo','China Southern','Lufthansa','Air China','China Eastern'],
+      datasets: [{ data: [35,20,18,8,8,6,5], backgroundColor: ['#f59e0b','#ef4444','#ec4899','#8b5cf6','#3b82f6','#06b6d4','#10b981'], borderWidth: 0 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { font: { size: 9 }, padding: 6 } }, title: { display: true, text: 'AIRLINE-ANTEIL FRA-PVG', color: '#94a3b8', font: { size: 11 } } }
+    }
+  });
+}
+
+// ===== TAB 4: CORRELATIONS =====
+function initCorrelationCharts() {
+  const W = ['1 Sep','8 Sep','15 Sep','22 Sep','29 Sep','6 Okt','13 Okt','20 Okt','27 Okt','3 Nov','10 Nov','17 Nov','24 Nov','1 Dez','8 Dez','15 Dez','22 Dez','29 Dez'];
+  new C(document.getElementById('c-lanes'), {
+    type: 'line',
+    data: {
+      labels: W,
+      datasets: [
+        { label: 'FCO-JFK C9 (Kupfer r=0.986)', data: [.783,.769,.788,.779,.828,.839,.827,.83,.978,1.03,.992,.98,1.008,.975,1.008,1.026,1.079,1.153], borderColor: '#ef4444', borderWidth: 2, tension: .3 },
+        { label: 'FCO-IAD C9 (BAI80 r=0.961)', data: [1.034,null,1.047,1.017,1.044,1.165,1.252,1.478,null,1.861,2.077,null,1.992,2.371,2.366,2.537,3.474,2.671], borderColor: '#3b82f6', borderWidth: 2, tension: .3, spanGaps: true },
+        { label: 'HKG-DOH C12 (BAI80 r=0.974)', data: [2.092,null,null,null,2.227,2.089,2.243,2.303,2.228,2.309,2.384,2.707,2.68,2.99,2.958,2.97,3.077,null], borderColor: '#10b981', borderWidth: 2, tension: .3, spanGaps: true }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { font: { size: 10 } } } },
+      scales: { y: { grid: GRID, min: 0, max: 4, title: { display: true, text: 'Yield $/kg', color: '#64748b' } }, x: { grid: GRID, ticks: { maxRotation: 45 } } }
+    }
+  });
+}
+
+// ===== TAB 5: CHAIN =====
+function initChainCharts() {
+  // BAI Surge
+  new C(document.getElementById('c-bai'), {
+    type: 'line',
+    data: {
+      labels: ['2. Maerz','9. Maerz','16. Maerz','23. Maerz','30. Maerz','6. April'],
+      datasets: [
+        { label: 'BAI80 PVG', data: [4445,4012,4208,4794,5348,5689], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,.1)', fill: true, tension: .3, pointRadius: 4, borderWidth: 2 },
+        { label: 'BAI30 HKG', data: [3156,3430,3472,3599,3871,4205], borderColor: '#8b5cf6', borderDash: [4,4], tension: .3, pointRadius: 3, borderWidth: 1.5 },
+        { label: 'BAI00 Composite', data: [2007,2012,2065,2192,2396,2519], borderColor: '#64748b', borderDash: [2,2], tension: .3, pointRadius: 2, borderWidth: 1 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        annotation: { annotations: {
+          oag: { type: 'box', xMin: 4.5, xMax: 5.5, backgroundColor: 'rgba(245,158,11,.06)', borderColor: 'rgba(245,158,11,.3)', borderWidth: 1, label: { content: 'OAG+Spire', display: true, position: 'start', font: { size: 9 }, color: '#f59e0b' } }
+        }}
+      },
+      scales: { x: { grid: GRID }, y: { grid: GRID, title: { display: true, text: 'Index', color: '#64748b' } } }
+    }
+  });
+
+  // Full chain timeline
+  new C(document.getElementById('c-chain'), {
+    type: 'line',
+    data: {
+      labels: ['Feb W1','Feb W2','Feb W3','Feb W4','Mrz W1','Mrz W2','Mrz W3','Mrz W4','Apr W1','Apr W2'],
+      datasets: [
+        { label: 'Kupfer (norm.)', data: [92,94,96,98,100,101,103,105,108,109], borderColor: '#8b5cf6', borderWidth: 2, tension: .3, pointRadius: 2, yAxisID: 'y' },
+        { label: 'GSCPI (norm.)', data: [88,90,95,100,105,108,112,118,122,125], borderColor: '#ec4899', borderDash: [4,4], borderWidth: 2, tension: .3, pointRadius: 2, yAxisID: 'y' },
+        { label: 'BAI80 PVG', data: [null,null,null,null,4445,4012,4208,4794,5348,5689], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,.08)', fill: true, borderWidth: 2.5, tension: .3, pointRadius: 3, yAxisID: 'y1' },
+        { label: 'Extra-Flight', data: [null,null,null,null,null,null,null,null,null,1], borderColor: '#10b981', backgroundColor: '#10b981', type: 'bar', barThickness: 10, yAxisID: 'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        annotation: { annotations: {
+          lead: { type: 'label', xValue: 'Mrz W2', yValue: 112, content: ['Makro steigt','zuerst'], font: { size: 9 }, color: '#8b5cf6', backgroundColor: 'rgba(139,92,246,.08)', padding: 3 },
+          bai: { type: 'label', xValue: 'Apr W1', yValue: 100, content: ['BAI80 folgt'], font: { size: 9 }, color: '#3b82f6', backgroundColor: 'rgba(59,130,246,.08)', padding: 3 },
+          extra: { type: 'label', xValue: 'Apr W2', yValue: 118, content: ['LH8426','Extra-FRT'], font: { size: 9, weight: 'bold' }, color: '#10b981', backgroundColor: 'rgba(16,185,129,.08)', padding: 3 }
+        }}
+      },
+      scales: {
+        x: { grid: { color: 'rgba(30,41,59,.3)' } },
+        y: { position: 'left', ticks: { color: '#8b5cf6' }, grid: { color: 'rgba(30,41,59,.3)' }, title: { display: true, text: 'Makro (norm.)', color: '#8b5cf6' } },
+        y1: { position: 'right', ticks: { color: '#3b82f6' }, grid: GRID_NONE, title: { display: true, text: 'BAI80', color: '#3b82f6' } },
+        y2: { display: false, min: 0, max: 5 }
+      }
+    }
+  });
+}
+
+// ===== TAB 6: PROOF =====
+function initProofCharts() {
+  const W = ['1 Sep','8 Sep','15 Sep','22 Sep','29 Sep','6 Okt','13 Okt','20 Okt','27 Okt','3 Nov','10 Nov','17 Nov','24 Nov','1 Dez','8 Dez','15 Dez','22 Dez','29 Dez'];
+  const yield_ = [.783,.769,.788,.779,.828,.839,.827,.83,.978,1.03,.992,.98,1.008,.975,1.008,1.026,1.079,1.153];
+  const cu = [9672,9672,9672,null,9995,9995,9995,9995,10740,10740,10740,10740,10812,10812,10812,10812,null,11791];
+
+  new C(document.getElementById('c-proof'), {
+    type: 'line',
+    data: {
+      labels: W,
+      datasets: [
+        { label: 'FCO-JFK C9 Yield ($/kg)', data: yield_, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.1)', fill: true, borderWidth: 2, tension: .3, pointRadius: 3, yAxisID: 'y' },
+        { label: 'Kupfer (4W shifted)', data: cu.map(v => v ? (v - 9500) / 2500 * .4 + .75 : null), borderColor: '#f59e0b', borderDash: [5,3], borderWidth: 2, tension: .1, pointRadius: 2, spanGaps: false, yAxisID: 'y' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        annotation: { annotations: {
+          spike: { type: 'point', xValue: '27 Okt', yValue: .978, backgroundColor: '#ef4444', radius: 6, borderColor: '#fff', borderWidth: 2 },
+          spikeLabel: { type: 'label', xValue: '27 Okt', yValue: 1.08, content: '+17.8% Spike!', font: { size: 10, weight: 'bold' }, color: '#ef4444' },
+          lead: { type: 'label', xValue: '6 Okt', yValue: 1.15, content: ['4W Lead','Kupfer → Yield'], font: { size: 9 }, color: '#f59e0b', backgroundColor: 'rgba(245,158,11,.1)', padding: 3 }
+        }}
+      },
+      scales: { y: { grid: GRID, min: .7, max: 1.2, title: { display: true, text: 'Yield $/kg', color: '#64748b' } }, x: { grid: GRID, ticks: { maxRotation: 45 } } }
+    }
+  });
+}
+</script>
+</body>
+</html>

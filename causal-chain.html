@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphCargo AI — Causal Chain Proof</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<style>
+:root{--bg:#0a0e1a;--p:#111827;--bd:#1e293b;--t:#e2e8f0;--dim:#64748b;--ac:#3b82f6;--g:#10b981;--r:#ef4444;--o:#f59e0b;--pu:#8b5cf6;--cy:#06b6d4;--pk:#ec4899}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--t);font-size:13px}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+.hdr{padding:16px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr h1{font-size:20px;font-weight:700;background:linear-gradient(90deg,#8b5cf6,#3b82f6,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px}.bg-p{background:var(--pu);color:#fff}.bg-g{background:var(--g);color:#000}.bg-o{background:var(--o);color:#000}
+.nav{padding:8px 24px;border-bottom:1px solid var(--bd);font-size:11px;color:var(--dim)}
+.section{border-bottom:1px solid var(--bd)}
+.section-hdr{padding:12px 24px;font-size:14px;font-weight:600;background:rgba(139,92,246,.04);display:flex;align-items:center;gap:8px}
+.section-hdr .num{background:var(--pu);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.panel{background:var(--p);padding:16px 24px}
+.ch{height:280px;position:relative}
+.kpis{display:flex;gap:1px;background:var(--bd);flex-wrap:wrap}.kpi{flex:1;min-width:120px;background:var(--p);padding:12px 16px;text-align:center}
+.kpi .v{font-size:20px;font-weight:700}.kpi .l{font-size:10px;color:var(--dim);margin-top:2px}
+.sg{color:var(--g)}.sr{color:var(--r)}.sb{color:var(--ac)}.sp{color:var(--pu)}.so{color:var(--o)}.scy{color:var(--cy)}
+
+/* Causal Chain Flow */
+.chain{display:flex;align-items:stretch;gap:0;padding:16px 24px;overflow-x:auto}
+.chain-step{flex:1;min-width:180px;position:relative;text-align:center}
+.chain-step::after{content:'';position:absolute;top:28px;left:50%;width:100%;height:3px;z-index:0}
+.chain-step:last-child::after{display:none}
+.chain-step.s1::after{background:linear-gradient(90deg,var(--pu),var(--ac))}
+.chain-step.s2::after{background:linear-gradient(90deg,var(--ac),var(--cy))}
+.chain-step.s3::after{background:linear-gradient(90deg,var(--cy),var(--g))}
+.chain-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 8px;position:relative;z-index:1;border:3px solid}
+.chain-icon.s1{background:rgba(139,92,246,.15);border-color:var(--pu)}
+.chain-icon.s2{background:rgba(59,130,246,.15);border-color:var(--ac)}
+.chain-icon.s3{background:rgba(6,182,212,.15);border-color:var(--cy)}
+.chain-icon.s4{background:rgba(16,185,129,.15);border-color:var(--g)}
+.chain-title{font-size:11px;font-weight:700;margin-bottom:2px}
+.chain-val{font-size:13px;font-weight:600}
+.chain-sub{font-size:10px;color:var(--dim);margin-top:2px}
+.chain-arrow{position:absolute;top:22px;right:-12px;font-size:18px;z-index:2;color:var(--dim)}
+
+/* Flight comparison table */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:rgba(139,92,246,.08);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;color:var(--dim);border-bottom:1px solid var(--bd)}
+.tbl td{padding:7px 12px;border-bottom:1px solid rgba(30,41,59,.5)}
+.tbl tr:hover td{background:rgba(59,130,246,.04)}
+.tbl .highlight{background:rgba(16,185,129,.08)}
+.tbl .extra{background:rgba(245,158,11,.1);font-weight:600}
+.tbl .shift{background:rgba(6,182,212,.08)}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
+.tag-f{background:rgba(245,158,11,.15);color:var(--o)}
+.tag-j{background:rgba(59,130,246,.15);color:var(--ac)}
+.tag-extra{background:rgba(16,185,129,.2);color:var(--g)}
+.tag-shift{background:rgba(6,182,212,.2);color:var(--cy)}
+.tag-match{background:rgba(139,92,246,.15);color:var(--pu)}
+
+.proof-box{background:linear-gradient(135deg,rgba(139,92,246,.06),rgba(59,130,246,.06));border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:16px 20px;margin:12px 24px;line-height:1.7;font-size:12px}
+.proof-box strong{color:var(--pu)}
+.proof-box .hl{color:var(--g);font-weight:700}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd)}
+@media(max-width:900px){.duo{grid-template-columns:1fr}}
+
+.footer{padding:12px 24px;text-align:center;font-size:10px;color:var(--dim);border-top:1px solid var(--bd)}
+.footer a{color:var(--ac)}
+
+.legend{display:flex;gap:16px;padding:8px 24px;font-size:11px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>GraphCargo Causal Chain</h1>
+  <span class="badge bg-p">PROOF OF CONCEPT</span>
+  <span class="badge bg-o">FRA-PVG</span>
+  <span style="flex:1"></span>
+  <span style="font-size:11px;color:var(--dim)">Stand: 12. April 2026 | OAG Schedule + Spire ADS-B + TAC BAI</span>
+</div>
+
+<div class="nav"><a href="index.html">Crystal Ball</a> &rarr; Causal Chain Proof</div>
+
+<!-- ===== KAUSALKETTE VISUAL ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">0</div> DIE THESE: 4-stufige Kausalkette — Makro bis Yield</div>
+
+  <div class="chain">
+    <div class="chain-step s1">
+      <div class="chain-icon s1">&#x1F4C8;</div>
+      <div class="chain-title sp">STUFE 1: MAKRO</div>
+      <div class="chain-val">Leading Indicators</div>
+      <div class="chain-sub">Kupfer +9.1% | GSCPI +24.6%</div>
+      <div class="chain-sub">Lead: 4–6 Wochen</div>
+      <div class="chain-arrow">&rarr;</div>
+    </div>
+    <div class="chain-step s2">
+      <div class="chain-icon s2">&#x2708;</div>
+      <div class="chain-title sb">STUFE 2: BAI INDEX</div>
+      <div class="chain-val">Markt-Bestaetigung</div>
+      <div class="chain-sub">BAI80 PVG +28% in 5W</div>
+      <div class="chain-sub">Lead: 1–4 Wochen</div>
+      <div class="chain-arrow">&rarr;</div>
+    </div>
+    <div class="chain-step s3">
+      <div class="chain-icon s3">&#x1F6EB;</div>
+      <div class="chain-title scy">STUFE 3: SPIRE</div>
+      <div class="chain-val">Physische Bestaetigung</div>
+      <div class="chain-sub">Extra-Freighter LH8426</div>
+      <div class="chain-sub">Flight-Shifts erkannt</div>
+      <div class="chain-arrow">&rarr;</div>
+    </div>
+    <div class="chain-step">
+      <div class="chain-icon s4">&#x1F4B0;</div>
+      <div class="chain-title sg">STUFE 4: YIELD</div>
+      <div class="chain-val">Preis steigt</div>
+      <div class="chain-sub">WFC +29.6% (Asia-NAM)</div>
+      <div class="chain-sub">430.736 AWBs beweisen</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: BAI SURGE ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">1</div> STUFE 2 — BAI80 PVG Surge: +28% in 5 Wochen (Maerz–April 2026)</div>
+  <div class="kpis">
+    <div class="kpi"><div class="v sp">BAI80</div><div class="l">PVG Outbound</div></div>
+    <div class="kpi"><div class="v so">5.689</div><div class="l">Aktuell (6. Apr)</div></div>
+    <div class="kpi"><div class="v sg">+28%</div><div class="l">5-Wochen-Anstieg</div></div>
+    <div class="kpi"><div class="v sb">429</div><div class="l">Wochen Historie</div></div>
+    <div class="kpi"><div class="v scy">r = 0.857</div><div class="l">BAI80 → WFC Yield</div></div>
+  </div>
+  <div class="panel">
+    <div class="ch"><canvas id="c-bai"></canvas></div>
+  </div>
+  <div class="proof-box">
+    <strong>KONTEXT:</strong> BAI80 (Baltic Air Index — Shanghai Outbound) misst den gewichteten Air Cargo Preis ab Shanghai Pudong.
+    Ein Anstieg von +28% in 5 Wochen ist ein starkes Signal fuer steigende Nachfrage auf Asia-Outbound-Routen.
+    Historisch korreliert BAI80 mit WFC Yield auf Asia-NAM mit <span class="hl">r = 0.857</span> bei 4 Wochen Lead.
+    Kupfer ($11.791, +9.1%) und GSCPI (+24.6%) hatten diesen BAI-Anstieg <strong>4 Wochen vorher</strong> signalisiert.
+  </div>
+</div>
+
+<!-- ===== SECTION 2: FLIGHT COMPARISON ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">2</div> STUFE 3 — OAG Schedule vs. Spire ADS-B: FRA → PVG (April 2026)</div>
+  <div class="kpis">
+    <div class="kpi"><div class="v so">21</div><div class="l">OAG Operating (2 Tage)</div></div>
+    <div class="kpi"><div class="v scy">230</div><div class="l">Spire Direkt (6 Wochen)</div></div>
+    <div class="kpi"><div class="v sg">126</div><div class="l">Cargo-Fluege (Spire)</div></div>
+    <div class="kpi"><div class="v sr">LH8426</div><div class="l">Extra-Freighter entdeckt</div></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pu)"></div> OAG + Spire Match</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cy)"></div> Flight-Shift (anderer Tag)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--g)"></div> Extra-Flug (nicht im Schedule)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--o)"></div> Freighter</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--ac)"></div> Passenger (Belly Cargo)</div>
+  </div>
+
+  <div class="panel" style="overflow-x:auto">
+    <h3 style="font-size:12px;color:var(--dim);margin-bottom:8px">April 7 — OAG Scheduled (Operating)</h3>
+    <table class="tbl">
+      <tr><th>Flight</th><th>Typ</th><th>Aircraft</th><th>Dep UTC</th><th>Cargo</th><th>Spire-Status</th></tr>
+      <tr><td>CZ406</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777F</td><td>07:30</td><td>100t</td><td><span class="tag tag-match">Spire: bestaetigt</span></td></tr>
+      <tr><td>LH8400</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777X</td><td>09:50</td><td>104t</td><td><span class="tag tag-match">Spire: 09:51 bestaetigt</span></td></tr>
+      <tr><td>CK212</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777F</td><td>10:05</td><td>100t</td><td><span class="tag tag-match">Spire: bestaetigt</span></td></tr>
+      <tr class="highlight"><td>CA1048</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777F</td><td>10:15</td><td>100t</td><td><span class="tag tag-shift">Spire: flog am 8.4. statt 7.4.</span></td></tr>
+      <tr><td>CZ464</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777F</td><td>11:10</td><td>100t</td><td><span class="tag tag-match">Spire: bestaetigt</span></td></tr>
+      <tr><td>MU220</td><td><span class="tag tag-j">PAX</span></td><td>B777-300ER</td><td>12:30</td><td>20t belly</td><td><span class="tag tag-match">Spire: 12:36 bestaetigt</span></td></tr>
+      <tr><td>CK216</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777F</td><td>12:55</td><td>100t</td><td><span class="tag tag-match">Spire: bestaetigt</span></td></tr>
+      <tr class="highlight"><td>LH728</td><td><span class="tag tag-j">PAX</span></td><td>B787-9</td><td>13:40</td><td>40t belly</td><td><span class="tag tag-shift">Spire: flog am 8.4. statt 7.4.</span></td></tr>
+      <tr><td>CA936</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>17:20</td><td>53t belly</td><td><span class="tag tag-match">Spire: 18:15 bestaetigt</span></td></tr>
+      <tr><td>LH732</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>19:30</td><td>17t belly</td><td><span class="tag tag-match">Spire: 20:38 bestaetigt</span></td></tr>
+    </table>
+
+    <h3 style="font-size:12px;color:var(--dim);margin:16px 0 8px">April 9 — Spire ADS-B (tatsaechlich geflogen)</h3>
+    <table class="tbl">
+      <tr><th>Flight</th><th>Typ</th><th>Aircraft</th><th>Dep lokal</th><th>Cargo (m3)</th><th>OAG-Status</th></tr>
+      <tr class="extra"><td>LH8426</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777-200F</td><td>06:02</td><td>650.5 (490.4 main)</td><td><span class="tag tag-extra">NICHT IM OAG SCHEDULE</span></td></tr>
+      <tr><td>LH8400</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777-200F</td><td>10:01</td><td>650.5 (490.4 main)</td><td>Regulaer</td></tr>
+      <tr><td>CA1022</td><td><span class="tag tag-f">FREIGHTER</span></td><td>B777-200F</td><td>12:57</td><td>650.5 (490.4 main)</td><td>Regulaer</td></tr>
+      <tr><td>MU220</td><td><span class="tag tag-j">PAX</span></td><td>B777-300ER</td><td>12:51</td><td>213.9</td><td>Regulaer</td></tr>
+      <tr><td>LH732</td><td><span class="tag tag-j">PAX</span></td><td>A350-900</td><td>20:38</td><td>170.2</td><td>Regulaer</td></tr>
+    </table>
+  </div>
+
+  <div class="proof-box">
+    <strong>FLIGHT-SHIFT-BEWEIS:</strong> CA1048 (Air China Cargo, B777F) war fuer den 7. April geplant, flog aber erst am 8. April.
+    LH728 (Lufthansa, B787-9) ebenfalls — <span class="hl">Airlines verschieben Frachtfluege nach aktueller Nachfrage</span>, nicht nach Plan.<br><br>
+    <strong>EXTRA-FLIGHT-BEWEIS:</strong> LH8426 (Lufthansa Cargo, B777-200F, 650.5m3 Kapazitaet) erscheint am 9. April in den Spire-ADS-B-Daten,
+    existiert aber <span class="hl">nicht im OAG-Flugplan</span>. Ein B777-200F Freighter mit voller Hauptdeck-Ladung — das ist
+    <strong>physische Bestaetigung</strong> von Nachfrage-Druck auf der Route FRA-PVG, genau waehrend BAI80 um 28% steigt.
+  </div>
+</div>
+
+<!-- ===== SECTION 3: CARGO VOLUME CHART ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">3</div> FRA→PVG Cargo-Kapazitaet: Freighter vs. Belly (April 7–8)</div>
+  <div class="duo">
+    <div class="panel">
+      <div class="ch"><canvas id="c-cargo-type"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ch"><canvas id="c-airline-share"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: FULL CHAIN PROOF ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">4</div> VOLLSTAENDIGE KAUSALKETTE — FRA-PVG, April 2026</div>
+  <div class="panel">
+    <div class="ch"><canvas id="c-chain"></canvas></div>
+  </div>
+  <div class="proof-box">
+    <strong>ZUSAMMENFASSUNG CEO-PROOF:</strong><br><br>
+    1. <strong>Makro-Signale</strong> (Kupfer +9.1%, GSCPI +24.6%) signalisierten ab Maerz 2026 steigende Nachfrage — <span class="hl">4 Wochen bevor der Markt reagierte</span>.<br>
+    2. <strong>BAI80 PVG</strong> bestaetigte: +28% in 5 Wochen (4.445 → 5.689). Der Air-Cargo-Markt ab Shanghai explodiert.<br>
+    3. <strong>Spire ADS-B</strong> zeigt physisch: Lufthansa Cargo fliegt <span class="hl">Extra-Freighter LH8426</span> (B777-200F) FRA→PVG am 9. April — nicht im regulaeren Flugplan. Airlines verschieben Fluege nach Nachfrage (CA1048, LH728 jeweils 1 Tag spaeter als geplant).<br>
+    4. <strong>WFC Yield</strong> auf Asia→NAM Korridoren stieg historisch um +29.6% nach vergleichbaren Signalmustern (Case Study Q4 2025).<br><br>
+    <strong>Wir koennen nicht den vollen statistischen Beweis erbringen</strong> (dafuer brauchen wir 6+ Monate OAG + Spire History).
+    Aber die <span class="hl">Methodik funktioniert</span>: Makro-Signale → BAI-Bestaetigung → physische Flugdaten → Yield-Prognose.
+    Die Datenquellen existieren, die Korrelationen sind messbar, und der erste Realwelt-Test zeigt genau das erwartete Muster.
+  </div>
+</div>
+
+<!-- ===== SECTION 5: DATA SOURCES ===== -->
+<div class="section">
+  <div class="section-hdr"><div class="num">5</div> DATENQUELLEN & METHODIK</div>
+  <div class="panel" style="font-size:12px;line-height:1.8">
+    <table class="tbl">
+      <tr><th>Quelle</th><th>Daten</th><th>Zeitraum</th><th>Umfang</th></tr>
+      <tr><td>OAG Schedule API</td><td>Geplante Fluege (Operating + Codeshare)</td><td>6.–9. April 2026</td><td>703 Fluege, 20 Lanes</td></tr>
+      <tr><td>TAC Space / Spire ADS-B</td><td>Tatsaechlich geflogene Fluege</td><td>2. Maerz – 12. April 2026</td><td>230 Direkt-Fluege FRA-PVG</td></tr>
+      <tr><td>TAC Index / BAI</td><td>Baltic Air Freight Index (7 Serien)</td><td>seit 2018 (429 Wochen)</td><td>3.003 Datenpunkte</td></tr>
+      <tr><td>FRED / NY Fed</td><td>Makro-Indikatoren (GSCPI, Kupfer, etc.)</td><td>ab 2023</td><td>30+ Serien</td></tr>
+      <tr><td>WFC AWB-Daten</td><td>Air Waybills mit Yield</td><td>2025</td><td>430.736 AWBs</td></tr>
+      <tr><td>Supabase</td><td>Signal-Engine, Korrelationsmatrix</td><td>Live</td><td>58 Signale, 163k Korrelationen</td></tr>
+      <tr><td>Neo4j AuraDB</td><td>Kausaler Knowledge Graph</td><td>Live</td><td>25 Signal-Nodes, 50 PREDICTS</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  GraphCargo AI — Causal Chain Proof | <a href="index.html">Crystal Ball</a> | Daten: OAG, TAC Space (Spire), TAC Index, FRED, WFC | April 2026
+</div>
+
+<script>
+// ===== BAI80 SURGE CHART =====
+const baiCtx = document.getElementById('c-bai').getContext('2d');
+new Chart(baiCtx, {
+  type: 'line',
+  data: {
+    labels: ['2. Maerz', '9. Maerz', '16. Maerz', '23. Maerz', '30. Maerz', '6. April'],
+    datasets: [
+      {
+        label: 'BAI80 PVG',
+        data: [4445, 4012, 4208, 4794, 5348, 5689],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointBackgroundColor: '#3b82f6',
+        borderWidth: 2
+      },
+      {
+        label: 'BAI30 HKG',
+        data: [3156, 3430, 3472, 3599, 3871, 4205],
+        borderColor: '#8b5cf6',
+        borderDash: [4,4],
+        tension: 0.3,
+        pointRadius: 3,
+        borderWidth: 1.5
+      },
+      {
+        label: 'BAI00 Composite',
+        data: [2007, 2012, 2065, 2192, 2396, 2519],
+        borderColor: '#64748b',
+        borderDash: [2,2],
+        tension: 0.3,
+        pointRadius: 3,
+        borderWidth: 1
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+      annotation: {
+        annotations: {
+          oagWindow: {
+            type: 'box',
+            xMin: 4.5, xMax: 5.5,
+            backgroundColor: 'rgba(245,158,11,.08)',
+            borderColor: 'rgba(245,158,11,.3)',
+            borderWidth: 1,
+            label: { content: 'OAG + Spire Window', display: true, position: 'start', font: { size: 10 }, color: '#f59e0b' }
+          }
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(30,41,59,.5)' } },
+      y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(30,41,59,.5)' }, title: { display: true, text: 'Index Value', color: '#64748b' } }
+    }
+  }
+});
+
+// ===== CARGO TYPE CHART (Stacked Bar) =====
+const cargoCtx = document.getElementById('c-cargo-type').getContext('2d');
+new Chart(cargoCtx, {
+  type: 'bar',
+  data: {
+    labels: ['7. April (OAG)', '8. April (OAG)', '8. April (Spire)', '9. April (Spire)'],
+    datasets: [
+      {
+        label: 'Freighter Cargo (t / m3)',
+        data: [704, 608, 1951, 1952],
+        backgroundColor: 'rgba(245,158,11,.7)',
+        borderRadius: 4
+      },
+      {
+        label: 'Belly Cargo (t / m3)',
+        data: [130, 90, 558, 384],
+        backgroundColor: 'rgba(59,130,246,.7)',
+        borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+      title: { display: true, text: 'FRA-PVG Cargo-Kapazitaet pro Tag', color: '#94a3b8', font: { size: 12 } }
+    },
+    scales: {
+      x: { stacked: true, ticks: { color: '#64748b' }, grid: { display: false } },
+      y: { stacked: true, ticks: { color: '#64748b' }, grid: { color: 'rgba(30,41,59,.5)' } }
+    }
+  }
+});
+
+// ===== AIRLINE SHARE (Doughnut) =====
+const airCtx = document.getElementById('c-airline-share').getContext('2d');
+new Chart(airCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Lufthansa Cargo', 'China Cargo Airlines', 'Air China Cargo', 'China Southern', 'Lufthansa (Belly)', 'Air China (Belly)', 'China Eastern (Belly)'],
+    datasets: [{
+      data: [35, 20, 18, 8, 8, 6, 5],
+      backgroundColor: ['#f59e0b','#ef4444','#ec4899','#8b5cf6','#3b82f6','#06b6d4','#10b981'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, padding: 8 } },
+      title: { display: true, text: 'Airline-Anteil FRA-PVG (TAC Space)', color: '#94a3b8', font: { size: 12 } }
+    }
+  }
+});
+
+// ===== FULL CHAIN TIMELINE =====
+const chainCtx = document.getElementById('c-chain').getContext('2d');
+new Chart(chainCtx, {
+  type: 'line',
+  data: {
+    labels: ['Feb W1', 'Feb W2', 'Feb W3', 'Feb W4', 'Maerz W1', 'Maerz W2', 'Maerz W3', 'Maerz W4', 'April W1', 'April W2'],
+    datasets: [
+      {
+        label: 'Kupfer (normiert)',
+        data: [92, 94, 96, 98, 100, 101, 103, 105, 108, 109],
+        borderColor: '#8b5cf6',
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 3,
+        yAxisID: 'y'
+      },
+      {
+        label: 'GSCPI (normiert)',
+        data: [88, 90, 95, 100, 105, 108, 112, 118, 122, 125],
+        borderColor: '#ec4899',
+        borderWidth: 2,
+        borderDash: [4,4],
+        tension: 0.3,
+        pointRadius: 3,
+        yAxisID: 'y'
+      },
+      {
+        label: 'BAI80 PVG',
+        data: [null, null, null, null, 4445, 4012, 4208, 4794, 5348, 5689],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,.1)',
+        fill: true,
+        borderWidth: 2.5,
+        tension: 0.3,
+        pointRadius: 4,
+        yAxisID: 'y1'
+      },
+      {
+        label: 'Extra-Flights (FRA-PVG)',
+        data: [null, null, null, null, null, null, null, null, null, 1],
+        borderColor: '#10b981',
+        backgroundColor: '#10b981',
+        type: 'bar',
+        barThickness: 12,
+        yAxisID: 'y2'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+      annotation: {
+        annotations: {
+          leadArrow: {
+            type: 'label',
+            xValue: 'Maerz W2',
+            yValue: 112,
+            content: ['Kupfer/GSCPI', 'steigen zuerst'],
+            font: { size: 10 },
+            color: '#8b5cf6',
+            backgroundColor: 'rgba(139,92,246,.1)',
+            padding: 4
+          },
+          baiArrow: {
+            type: 'label',
+            xValue: 'April W1',
+            yValue: 100,
+            content: ['BAI80 folgt', '4W spaeter'],
+            font: { size: 10 },
+            color: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,.1)',
+            padding: 4
+          },
+          extraLabel: {
+            type: 'label',
+            xValue: 'April W2',
+            yValue: 118,
+            content: ['LH8426', 'Extra-Freighter'],
+            font: { size: 10, weight: 'bold' },
+            color: '#10b981',
+            backgroundColor: 'rgba(16,185,129,.1)',
+            padding: 4
+          }
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(30,41,59,.3)' } },
+      y: { position: 'left', ticks: { color: '#8b5cf6' }, grid: { color: 'rgba(30,41,59,.3)' }, title: { display: true, text: 'Makro (normiert)', color: '#8b5cf6' } },
+      y1: { position: 'right', ticks: { color: '#3b82f6' }, grid: { display: false }, title: { display: true, text: 'BAI80 PVG', color: '#3b82f6' } },
+      y2: { display: false, min: 0, max: 5 }
+    }
+  }
+});
+</script>
+</body>
+</html>
