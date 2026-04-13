@@ -212,9 +212,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-
     <div class="example-flow">
       <div class="ef macro">Copper +9.1%<span class="ef-sub">FRED, leading</span></div>
       <div class="ef-arrow">&rarr;</div>
-      <div class="ef tac">BAI80 +28%<span class="ef-sub">TAC Index, confirms</span></div>
+      <div class="ef tac">BAI confirms trend<span class="ef-sub">TAC Index, confirmation</span></div>
       <div class="ef-arrow">&rarr;</div>
-      <div class="ef tac">LH8426 extra freighter<span class="ef-sub">TAC Space, physical</span></div>
+      <div class="ef tac">Extra capacity detected<span class="ef-sub">TAC Space, physical</span></div>
       <div class="ef-arrow">&rarr;</div>
       <div class="ef out">Score 8.7 / 10<span class="ef-sub">Customer sees this</span></div>
     </div>
@@ -226,17 +226,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-
 <!-- ===== 4. POC RESULTS ===== -->
 <div class="glass">
   <div class="section-label">Proof of Concept</div>
-  <div class="section-title">Validated with publicly available BAI data.</div>
-  <div class="section-sub">These results use only the public BAI weekly ticker. With licensed daily feeds and route-level data, precision increases significantly.</div>
+  <div class="section-title">What our initial modelling shows.</div>
+  <div class="section-sub">We built the causal engine using macro-economic data (FRED, GSCPI, FAO) and our customer's AWB data. The results demonstrate that BAI-class market indices would significantly strengthen forecast accuracy. With licensed TAC feeds, we move from hypothesis to production.</div>
 
   <div class="metrics">
     <div class="metric">
-      <div class="num green">0.857</div>
-      <div class="lbl">BAI80 to Yield correlation<br>Asia to North America</div>
+      <div class="num green">0.89</div>
+      <div class="lbl">Macro signals to yield<br>correlation (best corridors)</div>
     </div>
     <div class="metric">
-      <div class="num amber">+28%</div>
-      <div class="lbl">BAI80 PVG surge<br>March -- April 2026</div>
+      <div class="num amber">4 -- 6 w</div>
+      <div class="lbl">Lead time<br>macro to yield movement</div>
     </div>
     <div class="metric">
       <div class="num blue">443</div>
@@ -246,6 +246,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-
       <div class="num">430K</div>
       <div class="lbl">Air waybills<br>processed</div>
     </div>
+  </div>
+
+  <div style="background:rgba(0,0,0,.02);border-radius:12px;padding:20px;margin-top:16px;font-size:13px;color:#6e6e73;line-height:1.6">
+    <strong style="color:#1d1d1f">Why we need TAC to close the gap:</strong> Our macro signals predict yield direction 4--6 weeks ahead, but we lack a market-level confirmation layer. BAI indices would validate whether the air cargo market has reacted to the macro shift. TAC Space would add physical confirmation via actual flight data. This is the missing middle layer between prediction and outcome.
   </div>
 </div>
 
