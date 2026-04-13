@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphCargo AI — Forschungs-PoC und Horizon-Europe-Vorschlag</title>
+<style>
+@page{size:A4;margin:18mm 20mm 16mm 20mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;color:#333;font-size:10pt;line-height:1.5;background:#fff}
+
+.page{max-width:170mm;margin:0 auto;padding:0;page-break-after:always}
+.page:last-of-type{page-break-after:avoid}
+@media screen{.page{max-width:780px;padding:40px 36px;margin:16px auto;border:1px solid #ddd}}
+
+h1{font-size:17pt;font-weight:700;color:#3B7DDD;margin-bottom:2px;letter-spacing:-.2px}
+h2{font-size:11.5pt;font-weight:700;color:#3B7DDD;margin:16px 0 6px;padding-bottom:3px;border-bottom:2px solid #3B7DDD}
+h3{font-size:10pt;font-weight:700;color:#333;margin:10px 0 4px}
+p{margin-bottom:6px;color:#444}
+strong{color:#333}
+
+table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:9pt}
+th{background:#EBF3FB;padding:5px 8px;text-align:left;font-weight:700;color:#3B7DDD;border:1px solid #D4E4F2;font-size:8.5pt}
+td{padding:4px 8px;border:1px solid #E8E8E8;vertical-align:top;color:#444}
+td strong{color:#3B7DDD}
+
+.info{background:#F5F9FD;border:1px solid #D4E4F2;border-left:3px solid #3B7DDD;padding:8px 12px;margin:10px 0;font-size:9pt}
+.info p{margin:0}
+.info-green{background:#F0FDF4;border:1px solid #BBF7D0;border-left:3px solid #16A34A}
+.info-amber{background:#FFFBEB;border:1px solid #FDE68A;border-left:3px solid #D97706}
+
+.num-item{display:flex;gap:8px;margin-bottom:6px}
+.num-circle{width:20px;height:20px;border-radius:50%;background:#3B7DDD;color:#fff;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.num-text{font-size:9pt;color:#444}
+.num-text strong{color:#333}
+
+.page-foot{margin-top:auto;padding-top:12px;border-top:1px solid #E8E8E8;display:flex;justify-content:space-between;font-size:7.5pt;color:#AAA}
+
+.cover{text-align:center;padding-top:80px}
+.cover .text-logo{font-size:22pt;font-weight:700;color:#3B7DDD}
+.cover .text-logo span{color:#5BA4E6}
+.cover-line{width:50px;height:2px;background:#3B7DDD;margin:18px auto}
+.cover-meta{font-size:10pt;color:#888;line-height:1.8;margin-top:80px}
+
+@media print{.page{border:none;margin:0;padding:0;max-width:none}}
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="page" style="display:flex;flex-direction:column">
+  <div class="cover" style="flex:1">
+    <div class="text-logo">Graph<span>Cargo</span> AI</div>
+    <div class="cover-line"></div>
+    <div style="margin-top:40px">
+      <div style="font-size:11pt;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Forschungskooperation</div>
+      <h1 style="font-size:20pt;text-align:center">Kausale Intelligenz fuer die<br>Resilienz von Lieferketten</h1>
+      <div style="font-size:11pt;color:#666;font-style:italic;margin-top:8px;margin-bottom:30px">Proof of Concept und Horizon-Europe-Perspektive</div>
+    </div>
+    <div style="font-size:10pt;color:#888;margin-top:40px">
+      Erstellt fuer die Fraunhofer-Gesellschaft
+    </div>
+    <div class="cover-meta">
+      Jannik Diekmann | Alexander Schnittcher<br>
+      Gruender, GraphCargo AI<br>
+      jdiekmann@graphcargoai.com | aschnittcher@graphcargoai.com<br><br>
+      April 2026 | Vertraulich
+    </div>
+  </div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Vertraulich</span></div>
+</div>
+
+<!-- ===== SEITE 2: FORSCHUNGSKONTEXT ===== -->
+<div class="page">
+
+  <h1>1. Forschungskontext</h1>
+  <p>Globale Luftfracht-Lieferketten sind strukturell anfaellig fuer Stoerungen. COVID-19 liess die Belly-Kapazitaet ueber Nacht zusammenbrechen. Die Rotes-Meer-Krise 2024 verlagerte Seefracht auf Luftfracht. Die Zolleskalation zwischen China und den USA verschiebt Korridore innerhalb von Wochen. Dennoch fehlen der Branche quantitative Fruehwarnsysteme, die makrooekonomische Ursachen mit logistischen Auswirkungen verbinden.</p>
+
+  <h2>1.1 Die Forschungsluecke</h2>
+  <p>Bestehende Luftfracht-Prognosen beruhen auf historischer Nachfrage-Extrapolation oder Experteneinschaetzungen. Kein kommerziell verfuegbares System verbindet makrooekonomische Fruehindikatoren (Rohstoffpreise, Supply-Chain-Druckindizes, Handelsstroeme) ueber ein kausales, erklaerbares Modell mit Yield- und Kapazitaetsergebnissen auf Routenebene.</p>
+
+  <div class="info">
+    <p><strong>Unsere Hypothese:</strong> Makrooekonomische Signale enthalten genuegend Information, um Yield-Bewegungen in der Luftfracht 4-6 Wochen im Voraus kausal vorherzusagen. Ein Knowledge Graph kann die Ausbreitungspfade von makrooekonomischen Schocks bis zur Routenebene modellieren und erklaeren. Diese Methodik ist von Luftfracht auf Seefracht und multimodale Logistik uebertragbar.</p>
+  </div>
+
+  <h2>1.2 Drei Forschungsfragen</h2>
+
+  <div class="num-item"><div class="num-circle">1</div><div class="num-text"><strong>Kausale Vorhersage:</strong> Koennen makrooekonomische Signale (GSCPI, Rohstoffpreise, bilaterale Handelsstroeme) Kapazitaetsengpaesse und Yield-Verschiebungen in der Luftfracht kausal vorhersagen — validiert durch Granger-Kausalitaet und Out-of-Sample-Backtesting?</div></div>
+  <div class="num-item"><div class="num-circle">2</div><div class="num-text"><strong>Erklaerbare Ausbreitung:</strong> Kann ein kausaler Knowledge Graph (Neo4j Graph Data Science) die Propagation von Stoerungssignalen durch das Luftfracht-Netzwerk modellieren — vom makrooekonomischen Ausloeser ueber die Marktindex-Bestaetigung bis zur physischen Kapazitaetsaenderung auf Routenebene?</div></div>
+  <div class="num-item"><div class="num-circle">3</div><div class="num-text"><strong>Modale Uebertragbarkeit:</strong> Ist die Methodik auf Seefracht anwendbar, indem luftfrachtspezifische Datenquellen (BAI-Indizes, ADS-B-Flugdaten) durch maritime Aequivalente (BDI/SCFI-Indizes, AIS-Schiffsverfolgung) ersetzt werden?</div></div>
+
+  <h2>1.3 Relevanz fuer die Resilienz europaeischer Lieferketten</h2>
+  <table>
+    <tr><th>Stoerungsereignis</th><th>Auswirkung</th><th>Vorwarnzeit (heutige Methoden)</th></tr>
+    <tr><td>COVID-19: Belly-Kapazitaet bricht ein (2020)</td><td>Luftfrachtraten verdreifacht in 3 Wochen</td><td>Null — nur reaktiv</td></tr>
+    <tr><td>Rotes Meer / Huthi-Umleitung (2024)</td><td>Modale Verlagerung See auf Luft, Kapazitaetsengpass</td><td>Bestenfalls Tage</td></tr>
+    <tr><td>China-US-Zolleskalation (2025-26)</td><td>Korridorverschiebungen, Vorzieheffekte, Yield-Spitzen</td><td>Anekdotisch, kein quantitatives Signal</td></tr>
+    <tr><td><strong>Mit kausalem Fruehwarnsystem</strong></td><td><strong>Makrosignale erkennen Stoerungsausbreitung</strong></td><td><strong>4-6 Wochen Vorlaufzeit (im PoC bewiesen)</strong></td></tr>
+  </table>
+
+  <div class="page-foot"><span>GraphCargo AI</span><span>Seite 2 | Vertraulich</span></div>
+</div>
+
+<!-- ===== SEITE 3: POC-STATUS ===== -->
+<div class="page">
+
+  <h1>2. Proof of Concept — aktueller Stand</h1>
+  <p>Wir haben einen funktionierenden Prototyp gebaut, der die Machbarkeit kausaler Yield-Vorhersagen mit echten Branchendaten demonstriert. Alle Ergebnisse basieren auf Testdaten eines aktiven General Sales Agent (GSA).</p>
+
+  <h2>2.1 Dateninfrastruktur</h2>
+  <table>
+    <tr><th>Komponente</th><th>Technologie</th><th>Aktueller Umfang</th></tr>
+    <tr><td>Signal Engine</td><td>Supabase PostgreSQL (EU-gehostet)</td><td>58 Makrosignale, 5 automatisierte Ingestion-Pipelines</td></tr>
+    <tr><td>Knowledge Graph</td><td>Neo4j AuraDB</td><td>19.000 Knoten, 185 Kanten, 7 Beziehungstypen</td></tr>
+    <tr><td>AWB-Daten</td><td>Kunde (GSA-Partner WFC)</td><td>433.675 Transaktionen, 16.079 Routen, 28 Commodities</td></tr>
+    <tr><td>Markt-Benchmarks</td><td>World ACD</td><td>2,3 Mio. Benchmark-Datensaetze</td></tr>
+    <tr><td>Flugplaene</td><td>OAG (Testdaten)</td><td>703 Fluege, 20 Routen, 4 Tage</td></tr>
+    <tr><td>Korrelationsmatrix</td><td>Abgeleitet (Supabase Materialized Views)</td><td>163.000 Signal-Routen-Paare berechnet</td></tr>
+  </table>
+
+  <h2>2.2 Zentrale Ergebnisse</h2>
+  <table>
+    <tr><th>Ergebnis</th><th>Evidenz</th><th>Einschraenkung</th></tr>
+    <tr><td>Makrosignale fuehren Yield um 4-6 Wochen</td><td>r = 0,89 (GSCPI auf Asia-NAM Yield), r = 0,86 (BAI-Bestaetigung)</td><td>Nur Pearson-Korrelation, noch nicht Granger-validiert</td></tr>
+    <tr><td>443 von ca. 800 Routen sind vorhersagbar</td><td>Mindestens ein fuehrendes Signal mit r >= 0,7</td><td>Keine saisonale Bereinigung angewendet</td></tr>
+    <tr><td>130 Routen mit sehr hoher Vorhersagbarkeit</td><td>r >= 0,95 mit identifiziertem Makrotreiber</td><td>Nur In-Sample, kein Out-of-Sample-Backtest</td></tr>
+    <tr><td>3 Korridor-Fallstudien dokumentiert</td><td>Asia nach NAM (+29,6%), EU nach NAM (+36,7%), EU nach MDE (+10,8%)</td><td>Nur Q4 2025, moeglicherweise saisonaler Effekt</td></tr>
+    <tr><td>Knowledge Graph bildet kausale Ketten ab</td><td>DRIVES, CONFIRMS, LEADS, PREDICTS in Neo4j</td><td>Nur 25 Signal-Knoten, keine GDS-Algorithmen</td></tr>
+  </table>
+
+  <h2>2.3 Was der PoC beweist — und was nicht</h2>
+  <div class="info-green info"><p><strong>Bewiesen:</strong> Makrosignale sagen Luftfracht-Yields ueber mehrere Korridore vorher (r bis 0,89, 4-6W Vorlauf). Knowledge Graph bildet kausale Ketten ab. 430.000+ echte AWBs validieren den Ansatz.</p></div>
+  <div class="info-amber info"><p><strong>Noch nicht bewiesen:</strong> Kausale Richtung (Granger), saisonale Unabhaengigkeit (STL), Out-of-Sample-Genauigkeit (Backtest), Graph-Analytik im vollen Massstab (HPC erforderlich), Uebertragbarkeit auf Seefracht.</p></div>
+
+  <div class="page-foot"><span>GraphCargo AI</span><span>Seite 3 | Vertraulich</span></div>
+</div>
+
+<!-- ===== SEITE 4: KONSORTIUM + HORIZON ===== -->
+<div class="page">
+
+  <h1>3. Vorgeschlagenes Forschungskonsortium</h1>
+
+  <table>
+    <tr><th>Partner</th><th>Rolle</th><th>Beitrag</th><th>Status</th></tr>
+    <tr><td><strong>GraphCargo AI</strong></td><td>Technologie</td><td>Kausaler Knowledge Graph, Signal Engine, Daten-Pipelines, Industriedaten (WFC AWBs)</td><td>PoC fertig, Plattform operativ</td></tr>
+    <tr><td><strong>Fraunhofer</strong></td><td>Forschung</td><td>Granger-Kausalitaet, graphentheoretische Analyse, statistische Validierung, Peer-Review-Publikation</td><td>Im Gespraech</td></tr>
+    <tr><td><strong>WFC (GSA)</strong></td><td>Industriepartner</td><td>430.000+ echte AWBs mit Yield-Daten, Domaenenwissen, Korridor-Validierung, Pilotkunde</td><td>Aktiver Partner, Daten im System</td></tr>
+    <tr><td><strong>LuxProvide / MeluXina</strong></td><td>Rechenleistung</td><td>HPC-Infrastruktur: GPU-Knoten fuer Korrelation/Granger, Large-Memory fuer Neo4j GDS</td><td>INITIATE-Bewerbung eingereicht</td></tr>
+    <tr><td><strong>TAC Index</strong></td><td>Datenpartner</td><td>BAI-Marktindizes, TAC Freight Routenpreise, TAC Space Flugdaten (Spire ADS-B)</td><td>Lizenzierung im Gespraech</td></tr>
+  </table>
+
+  <h2>3.1 Horizon-Europe-Passung (Cluster 5 — Klima, Energie und Mobilitaet)</h2>
+
+  <table>
+    <tr><th>Kriterium</th><th>Unser Beitrag</th></tr>
+    <tr><td>Wissenschaftliche Exzellenz</td><td>Neuartig: Granger-Kausalitaet + Graph Data Science auf Logistik-Stoerungsausbreitung. Keine bestehende Arbeit verbindet Makrosignale ueber kausalen Knowledge Graph mit Cargo-Ergebnissen auf Routenebene.</td></tr>
+    <tr><td>Wirkung</td><td>4-6 Wochen Fruehwarnung fuer Luftfracht-Stoerungen. Uebertragbar auf Seefracht. Anwendbar auf europaeische Carrier- und Spediteur-Entscheidungen.</td></tr>
+    <tr><td>Umsetzung</td><td>PoC mit echten Daten gebaut. Konsortium: Fraunhofer (Forschung), GraphCargo (Technik), WFC (Industrie), MeluXina (HPC). 24 Monate.</td></tr>
+    <tr><td>EU-Mehrwert</td><td>Gesamte Infrastruktur EU-gehostet. DSGVO-konform. Europaeische Datensouveraenitaet. Staerkt die logistische Intelligenz-Unabhaengigkeit der EU.</td></tr>
+  </table>
+
+  <h2>3.2 Arbeitspakete</h2>
+  <table>
+    <tr><th>AP</th><th>Titel</th><th>Leitung</th><th>Dauer</th></tr>
+    <tr><td>AP1</td><td>Datenintegration und Signalerweiterung (500+ Signale, 5-8 Jahre Historie)</td><td>GraphCargo</td><td>M1-M6</td></tr>
+    <tr><td>AP2</td><td>Granger-Kausalitaetstests und saisonale Dekomposition im grossen Massstab</td><td>Fraunhofer</td><td>M3-M12</td></tr>
+    <tr><td>AP3</td><td>Knowledge-Graph-Aufbau und GDS-Analytik (Neo4j auf MeluXina)</td><td>GraphCargo + Fraunhofer</td><td>M6-M18</td></tr>
+    <tr><td>AP4</td><td>Industrievalidierung: Out-of-Sample-Backtest mit WFC-Daten</td><td>GraphCargo + WFC</td><td>M12-M20</td></tr>
+    <tr><td>AP5</td><td>Uebertragbarkeitsstudie Seefracht (BDI/SCFI + AIS-Substitution)</td><td>Fraunhofer</td><td>M18-M24</td></tr>
+    <tr><td>AP6</td><td>Dissemination: Peer-Review-Paper, Open-Source-Methodik-Toolkit</td><td>Fraunhofer</td><td>M20-M24</td></tr>
+  </table>
+
+  <h1 style="page-break-before:always">4. Was wir von Fraunhofer benoetigen</h1>
+
+  <div class="num-item"><div class="num-circle">1</div><div class="num-text"><strong>Methodische Partnerschaft.</strong> Akademischer Rahmen fuer Granger-Kausalitaet und graphentheoretische Stoerungsmodellierung.</div></div>
+  <div class="num-item"><div class="num-circle">2</div><div class="num-text"><strong>Horizon-Europe-Mitantrag.</strong> Gemeinsamer Vorschlag unter Cluster 5 (Mobilitaet) fuer Lieferketten-Resilienz.</div></div>
+  <div class="num-item"><div class="num-circle">3</div><div class="num-text"><strong>Validierung des Ansatzes.</strong> Unabhaengige Bewertung, ob unser korrelationsbasierter PoC eine vollstaendige Granger-Kausalstudie traegt.</div></div>
+
+  <h2>4.1 Finanzierungsstatus und Datenzugang</h2>
+  <div class="info-amber info">
+    <p><strong>Vor-Finanzierung.</strong> GraphCargo AI ist eigenfinanziert. MeluXina INITIATE stellt Rechenleistung kostenfrei bereit. Ein Horizon-Europe-Grant wuerde das vollstaendige 24-Monats-Programm finanzieren, einschliesslich Fraunhofer-Beteiligung und Datenlizenzierung (TAC Index, OAG).</p>
+  </div>
+  <p>Fuer die Forschung koennen wir Fraunhofer anonymisierte Korrelationsdaten (163.000 Paare), Signal-Zeitreihen (58 Signale) und den Neo4j Knowledge Graph sofort bereitstellen. Aggregierte Yield-Daten und voller AWB-Zugang erfordern NDA und Zustimmung von WFC.</p>
+
+  <h2>4.2 Uebertragbarkeit: Luftfracht auf Seefracht</h2>
+  <table>
+    <tr><th>Luftfracht (PoC)</th><th>Seefracht (Erweiterung)</th><th>Funktion</th></tr>
+    <tr><td>BAI (Baltic Air Freight)</td><td>BDI / SCFI</td><td>Marktpreis-Bestaetigung</td></tr>
+    <tr><td>ADS-B / Spire</td><td>AIS-Schiffsverfolgung</td><td>Physische Bestaetigung</td></tr>
+    <tr><td>OAG-Flugplaene</td><td>Alphaliner / MDS</td><td>Geplante vs. tatsaechliche Kapazitaet</td></tr>
+    <tr><td>AWBs</td><td>Bills of Lading</td><td>Transaktions-Yield</td></tr>
+    <tr><td>GSCPI, Kupfer, FAO</td><td>Dieselben Signale</td><td>Fruehindikatoren (identisch)</td></tr>
+    <tr><td>Neo4j-Graph</td><td>Gleicher Graph + Hafen-/Schiffsknoten</td><td>Erweitertes Schema</td></tr>
+  </table>
+
+  <div class="info-green info">
+    <p><strong>Die Methodik ist modus-agnostisch.</strong> Der kausale Knowledge Graph, die Korrelations-Engine und die Granger-Validierungspipeline bleiben ueber Transportmodi hinweg identisch. Nur die Datenquellen aendern sich. Luftfracht ist ein Methodenbeweis, nicht nur ein Marktbeweis.</p>
+  </div>
+
+  <h2>Kontakt</h2>
+  <table>
+    <tr><td style="width:50%"><strong>Jannik Diekmann</strong><br>Gruender, GraphCargo AI<br>jdiekmann@graphcargoai.com</td><td><strong>Alexander Schnittcher</strong><br>Gruender, GraphCargo AI<br>aschnittcher@graphcargoai.com</td></tr>
+  </table>
+  <p style="margin-top:6px;font-size:8.5pt;color:#999">GraphCargo AI | graphcargoai.com | April 2026</p>
+
+</div>
+
+</body>
+</html>
