@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphCargo AI — MeluXina INITIATE Application</title>
+<style>
+@page{size:A4;margin:18mm 20mm 16mm 20mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;color:#333;font-size:10pt;line-height:1.5;background:#fff}
+
+.page{max-width:170mm;margin:0 auto;padding:0;page-break-after:always}
+.page:last-of-type{page-break-after:avoid}
+@media screen{.page{max-width:780px;padding:40px 36px;margin:16px auto;border:1px solid #ddd}}
+
+/* Brand colors from One-Pager */
+h1{font-size:17pt;font-weight:700;color:#3B7DDD;margin-bottom:2px;letter-spacing:-.2px}
+h2{font-size:11.5pt;font-weight:700;color:#3B7DDD;margin:16px 0 6px;padding-bottom:3px;border-bottom:2px solid #3B7DDD}
+h3{font-size:10pt;font-weight:700;color:#333;margin:10px 0 4px}
+p{margin-bottom:6px;color:#444}
+strong{color:#333}
+
+.subtitle{font-size:10pt;color:#666;margin-bottom:14px}
+
+/* Tables matching One-Pager style */
+table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:9pt}
+th{background:#EBF3FB;padding:5px 8px;text-align:left;font-weight:700;color:#3B7DDD;border:1px solid #D4E4F2;font-size:8.5pt}
+td{padding:4px 8px;border:1px solid #E8E8E8;vertical-align:top;color:#444}
+td strong{color:#3B7DDD}
+
+/* Info box — light blue like One-Pager */
+.info{background:#F5F9FD;border:1px solid #D4E4F2;border-left:3px solid #3B7DDD;padding:8px 12px;margin:10px 0;font-size:9pt}
+.info p{margin:0}
+
+/* Cover */
+.cover{text-align:center;padding-top:80px}
+.cover-logo{margin-bottom:28px}
+.cover-logo img{height:60px}
+.cover-logo .text-logo{font-size:22pt;font-weight:700;color:#3B7DDD}
+.cover-logo .text-logo span{color:#5BA4E6}
+.cover h1{font-size:18pt;color:#333;margin-bottom:4px}
+.cover .cover-sub{font-size:11pt;color:#666;font-style:italic;margin-bottom:30px}
+.cover-line{width:50px;height:2px;background:#3B7DDD;margin:18px auto}
+.cover-meta{font-size:10pt;color:#888;line-height:1.8;margin-top:80px}
+
+/* Two columns */
+.cols{display:flex;gap:20px}
+.cols > div{flex:1}
+
+/* Numbered list style */
+.num-item{display:flex;gap:8px;margin-bottom:6px}
+.num-circle{width:20px;height:20px;border-radius:50%;background:#3B7DDD;color:#fff;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.num-text{font-size:9pt;color:#444}
+.num-text strong{color:#333}
+
+/* Footer */
+.page-foot{margin-top:auto;padding-top:12px;border-top:1px solid #E8E8E8;display:flex;justify-content:space-between;font-size:7.5pt;color:#AAA}
+
+/* Compact list */
+ul.compact{padding-left:16px;margin:4px 0 6px}
+ul.compact li{font-size:9pt;color:#444;margin-bottom:2px}
+
+@media print{
+  .page{border:none;margin:0;padding:0;max-width:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="page" style="display:flex;flex-direction:column">
+  <div class="cover" style="flex:1">
+    <div class="cover-logo">
+      <div class="text-logo">Graph<span>Cargo</span> AI</div>
+    </div>
+    <div class="cover-line"></div>
+    <div style="margin-top:40px">
+      <div style="font-size:11pt;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Airfreight Market Intelligence Platform</div>
+      <h1 style="font-size:22pt;text-align:center">HPC Application</h1>
+      <div class="cover-sub">MeluXina INITIATE Programme</div>
+    </div>
+    <div class="cover-meta">
+      Jannik Diekmann | Alexander Schnittcher<br>
+      Founders, GraphCargo AI<br>
+      jdiekmann@graphcargoai.com | aschnittcher@graphcargoai.com<br><br>
+      April 2026 | Confidential
+    </div>
+  </div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Confidential</span></div>
+</div>
+
+<!-- ===== PAGE 2: STATUS QUO ===== -->
+<div class="page">
+
+  <h1>About GraphCargo</h1>
+  <p>GraphCargo AI is an airfreight market intelligence platform currently in formation. We integrate 15+ data sources into a causal knowledge graph that serves airlines, freight forwarders, and GSAs with personalised market intelligence.</p>
+
+  <table>
+    <tr><td style="width:140px"><strong>Target Users</strong></td><td>Airlines (capacity management &amp; yield optimisation), Forwarders (procurement timing), GSAs (portfolio optimisation &amp; allotment negotiation)</td></tr>
+    <tr><td><strong>Technology</strong></td><td>Supabase PostgreSQL, Neo4j Graph Database, automated Edge Function pipelines</td></tr>
+    <tr><td><strong>Status</strong></td><td>POC complete. Proven correlations on test data. 430,000+ AWBs processed, 15 data sources automated. First causal clusters identified in knowledge graph.</td></tr>
+  </table>
+
+  <h2>Current Data (Test Environment)</h2>
+  <p>Our database contains test and sample datasets that allowed us to validate the approach. All volumes below reflect the prototype scope.</p>
+
+  <table>
+    <tr><th>Dataset</th><th>Volume</th><th>Source</th><th>Status</th></tr>
+    <tr><td>AWB Transactions</td><td>433,675</td><td>Customer (1 GSA)</td><td>1 year, single customer</td></tr>
+    <tr><td>WACD Market Benchmarks</td><td>2,308,443</td><td>World ACD</td><td>Limited history</td></tr>
+    <tr><td>WACD Product-Level</td><td>726,896</td><td>World ACD</td><td>Limited history</td></tr>
+    <tr><td>Macro Signals</td><td>5,297</td><td>FRED / FAO / NY Fed</td><td>58 series, 2-3 years</td></tr>
+    <tr><td>Flight Schedules</td><td>703</td><td>OAG (test sample)</td><td>4 days, 20 lanes</td></tr>
+    <tr><td>Lane Yield Weekly</td><td>90,025</td><td>Derived from AWBs</td><td>Aggregated time series</td></tr>
+    <tr><td>Reference Data</td><td>19,200</td><td>Airports, airlines, commodities</td><td>Complete</td></tr>
+  </table>
+
+  <h2>Initial Knowledge Graph (Neo4j)</h2>
+  <p>From this test data, we built a causal knowledge graph that models how macro-economic signals relate to air cargo yield movements across corridors.</p>
+
+  <div class="cols">
+    <div>
+      <h3>Nodes</h3>
+      <table>
+        <tr><th>Type</th><th>Count</th></tr>
+        <tr><td>Signal (macro + market)</td><td>25</td></tr>
+        <tr><td>Airport</td><td>14,137</td></tr>
+        <tr><td>Lane (route pairs)</td><td>5,000</td></tr>
+        <tr><td>LaneCommodity (predictable)</td><td>50</td></tr>
+        <tr><td>Corridor (region pairs)</td><td>7</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Edges</h3>
+      <table>
+        <tr><th>Relationship</th><th>Count</th></tr>
+        <tr><td>PREDICTS (signal &rarr; lane)</td><td>50</td></tr>
+        <tr><td>DRIVES (macro &rarr; index)</td><td>5</td></tr>
+        <tr><td>CONFIRMS (index &rarr; corridor)</td><td>15</td></tr>
+        <tr><td>LEADS (signal &rarr; corridor)</td><td>15</td></tr>
+        <tr><td>Spatial (origin/destination)</td><td>~100</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="info">
+    <p><strong>Key finding:</strong> With only 58 signals and limited test data, we identified 443 predictable lanes (Pearson r &ge; 0.7) and 130 lanes with r &ge; 0.95. Three corridor case studies proved that macro signals lead air cargo yield movements by 4-6 weeks. However, these correlations are not yet statistically validated as causal. This is why we need HPC.</p>
+  </div>
+
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 2 | Confidential</span></div>
+</div>
+
+<!-- ===== PAGE 3: COMPUTATIONAL CHALLENGE ===== -->
+<div class="page">
+
+  <h1>The Computational Challenge</h1>
+  <p>Moving from test-data correlations to statistically validated causal intelligence requires 5-8 years of historical data across all sources and significantly more compute than a cloud database provides.</p>
+
+  <h2>Production-Scale Data Requirements</h2>
+
+  <table>
+    <tr><th>Dataset</th><th>Test (today)</th><th>Production (5-8 years)</th><th>Factor</th></tr>
+    <tr><td>Macro / market signals</td><td>58 series</td><td>500+ series</td><td>x9</td></tr>
+    <tr><td>Lane x commodity pairs</td><td>45,597</td><td>100,000+</td><td>x2</td></tr>
+    <tr><td>Flight schedules (OAG)</td><td>703</td><td>40-80 million</td><td>x100,000</td></tr>
+    <tr><td>Actual flights (Spire ADS-B)</td><td>230</td><td>25-40 million</td><td>x100,000</td></tr>
+    <tr><td>AWBs (multi-customer)</td><td>433,675</td><td>10-20 million</td><td>x30</td></tr>
+    <tr><td>WACD benchmarks</td><td>2.3 million</td><td>15-25 million</td><td>x8</td></tr>
+    <tr><td><strong>Correlation matrix</strong></td><td><strong>163,000 pairs</strong></td><td><strong>~270 billion pairs</strong></td><td><strong>x1.6 million</strong></td></tr>
+  </table>
+
+  <h2>Compute Workloads</h2>
+  <p>We have identified five computational blocks that exceed what our cloud database (Supabase PostgreSQL) can handle. All workloads are classical statistics and graph analytics. No LLMs or generative AI.</p>
+
+  <table>
+    <tr><th>Block</th><th>Description</th><th>Scale</th><th>Est. GPU-h</th></tr>
+    <tr><td><strong>1. Correlation Matrix</strong></td><td>Every signal x every lane-commodity x every lag window (1-52 weeks) x rolling time windows</td><td>~270 billion Pearson computations</td><td>~2,000</td></tr>
+    <tr><td><strong>2. Granger Causality</strong></td><td>VAR model estimation, F-test, and bootstrap confidence intervals for every significant pair</td><td>~27 million pairs x 100 bootstrap iterations</td><td>~7,500</td></tr>
+    <tr><td><strong>3. Flight Delta Analysis</strong></td><td>OAG scheduled vs. Spire actual: matching, delta computation, correlation with market indices</td><td>~55 million flight matches</td><td>~200</td></tr>
+    <tr><td><strong>4. Graph Data Science</strong></td><td>Node2Vec embeddings, community detection (Louvain), PageRank, link prediction on full knowledge graph</td><td>12.5M nodes, 42M edges</td><td>~500</td></tr>
+    <tr><td><strong>5. Validation</strong></td><td>Seasonal decomposition (STL), rolling-window out-of-sample backtesting across all corridors</td><td>50M decompositions, 5.2M model fits</td><td>~1,000</td></tr>
+    <tr style="background:#EBF3FB"><td colspan="2"><strong>Total estimated compute requirement</strong></td><td></td><td><strong>~11,200 GPU-h</strong></td></tr>
+  </table>
+
+  <h2 style="page-break-before:avoid">Knowledge Graph at Production Scale</h2>
+
+  <table style="page-break-inside:avoid">
+    <tr><th></th><th>Today (Test)</th><th>Production (Target)</th></tr>
+    <tr><td><strong>Nodes</strong></td><td>~19,000 (signals, airports, lanes)</td><td>12.5 million (+ flights, AWBs, benchmarks)</td></tr>
+    <tr><td><strong>Edges</strong></td><td>~185</td><td>42 million (PREDICTS, OPERATED_ON, HAS_AWB)</td></tr>
+    <tr><td><strong>GDS</strong></td><td>Not possible (free tier)</td><td>Node2Vec, Louvain, PageRank, temporal</td></tr>
+    <tr><td><strong>RAM</strong></td><td>512 MB</td><td>50-80 GB in-memory graph projection</td></tr>
+  </table>
+
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 3 | Confidential</span></div>
+</div>
+
+<!-- ===== PAGE 4: INITIATE PLAN ===== -->
+<div class="page">
+
+  <div class="info">
+    <p><strong>Why cloud infrastructure is insufficient:</strong> Our Supabase PostgreSQL handles the live data pipeline and daily ingestion well. However, computing 270 billion correlations, running 2.7 billion Granger model fits, and executing Graph Data Science on 42 million edges requires dedicated HPC infrastructure with GPU acceleration and large shared memory. This is exactly what MeluXina provides.</p>
+  </div>
+
+  <h1>INITIATE POC Plan</h1>
+  <p>We propose to use the INITIATE programme budget (1,500 GPU node-hours) to prove that graph-based causal intelligence works at scale on a focused subset of our data.</p>
+
+  <h2>Proposed Scope (6 Months)</h2>
+
+  <table>
+    <tr><th>Workload</th><th>Scope</th><th>GPU-h</th><th>Deliverable</th></tr>
+    <tr><td>Correlation matrix</td><td>58 signals x top 5,000 lanes x 52 lags</td><td>~400</td><td>Full lag-correlation matrix for top corridors</td></tr>
+    <tr><td>Granger causality</td><td>Top 500 significant pairs</td><td>~200</td><td>Statistically validated causal relationships</td></tr>
+    <tr><td>Neo4j Graph Data Science</td><td>Node2Vec + community detection on expanded graph</td><td>~400</td><td>Signal clusters, explainable causal chains</td></tr>
+    <tr><td>Flight delta analysis</td><td>20 key routes, available test period</td><td>~100</td><td>Extra-flight detection correlated with indices</td></tr>
+    <tr><td>Seasonal decomposition</td><td>Top 5,000 lane-commodity pairs (STL)</td><td>~200</td><td>Cleaned correlations, seasonal artefacts removed</td></tr>
+    <tr><td>Rolling backtest</td><td>52-week out-of-sample on 100 lanes</td><td>~200</td><td>Forecast accuracy metrics (RMSE, MAE, hit rate)</td></tr>
+    <tr style="background:#EBF3FB"><td colspan="2"><strong>Total</strong></td><td><strong>~1,500</strong></td><td></td></tr>
+  </table>
+
+  <h2>Expected Outcomes</h2>
+
+  <div class="num-item"><div class="num-circle">1</div><div class="num-text"><strong>Statistical validation.</strong> Move from correlation to Granger-causal for the top signal-lane pairs.</div></div>
+  <div class="num-item"><div class="num-circle">2</div><div class="num-text"><strong>Explainable knowledge graph.</strong> Signal clusters via GDS that show why yields move.</div></div>
+  <div class="num-item"><div class="num-circle">3</div><div class="num-text"><strong>Forecast accuracy baseline.</strong> Out-of-sample backtest on top 100 lanes with measurable accuracy.</div></div>
+  <div class="num-item"><div class="num-circle">4</div><div class="num-text"><strong>Physical confirmation layer.</strong> Schedule vs. actual flight delta as a new signal type.</div></div>
+
+  <h2>Technical Requirements</h2>
+
+  <table>
+    <tr><th>Resource</th><th>Requirement</th><th>Reason</th></tr>
+    <tr><td>GPU nodes (A100)</td><td>4-8 nodes in parallel</td><td>Correlation and Granger workloads are embarrassingly parallel</td></tr>
+    <tr><td>Large memory node</td><td>1 node (4 TB RAM)</td><td>Neo4j GDS in-memory graph projection (50-80 GB at current scale)</td></tr>
+    <tr><td>Storage (Tier 2)</td><td>~2 TB</td><td>Input data, intermediate results, graph exports</td></tr>
+    <tr><td>Software</td><td>Python (statsmodels, scipy, numpy), Neo4j GDS, Slurm</td><td>Classical econometrics and graph analytics</td></tr>
+  </table>
+
+  <div class="info">
+    <p><strong>Clarification on AI usage:</strong> All computation is classical statistics and graph analytics: Pearson correlation, Granger causality (VAR), STL decomposition, Node2Vec, Louvain. No LLMs trained. No generative AI. This is econometric modelling and graph data science at scale.</p>
+  </div>
+
+  <h1 style="margin-top:24px">Roadmap</h1>
+
+  <h2>Phase Plan</h2>
+
+  <table>
+    <tr><th>Phase</th><th>Timeline</th><th>Programme</th><th>Compute</th><th>Objective</th></tr>
+    <tr><td><strong>Phase 1</strong></td><td>May - Oct 2026</td><td>INITIATE</td><td>1,500 GPU-h</td><td>POC: Granger tests, GDS clusters, backtest on top lanes</td></tr>
+    <tr><td><strong>Phase 2</strong></td><td>Nov 2026 - Apr 2027</td><td>Cashback 80%</td><td>~10,000 GPU-h</td><td>Full scale: all lanes, 5-8 year history, production graph</td></tr>
+    <tr><td><strong>Phase 3</strong></td><td>May 2027 onward</td><td>Commercial</td><td>Recurring</td><td>Weekly re-computation, expanding customer base</td></tr>
+  </table>
+
+  <h2>Knowledge Graph Evolution</h2>
+
+  <table>
+    <tr><th></th><th>Today</th><th>After INITIATE</th><th>After Cashback 80%</th></tr>
+    <tr><td><strong>Nodes</strong></td><td>~19,000</td><td>~50,000</td><td>12.5 million</td></tr>
+    <tr><td><strong>Edges</strong></td><td>~185</td><td>~500,000</td><td>42 million</td></tr>
+    <tr><td><strong>GDS Algorithms</strong></td><td>None</td><td>Node2Vec, Louvain, PageRank</td><td>Full GDS + temporal analytics</td></tr>
+    <tr><td><strong>Validated pairs</strong></td><td>0 (correlation only)</td><td>500 (Granger-tested)</td><td>27 million (Granger-tested)</td></tr>
+    <tr><td><strong>Backtest</strong></td><td>None</td><td>100 lanes, 52 weeks</td><td>All lanes, multi-year</td></tr>
+  </table>
+
+  <h2>Why MeluXina</h2>
+
+  <table>
+    <tr><td style="width:160px"><strong>Data sovereignty</strong></td><td>Our data includes customer AWBs and licensed commercial datasets (WACD, OAG). European-hosted, Tier IV, ISO 27001, GDPR-compliant infrastructure is a requirement for our data partners and customers.</td></tr>
+    <tr><td><strong>Architecture fit</strong></td><td>Our workload combines GPU-parallel econometrics (correlation, Granger) with memory-intensive graph analytics (Neo4j GDS). MeluXina's modular design with separate GPU and large-memory nodes maps directly to these two needs.</td></tr>
+    <tr><td><strong>Expert support</strong></td><td>As a startup with limited HPC experience, the INITIATE programme's technical support (24 L1/L2 tickets) is important for optimising our workloads on the supercomputing platform.</td></tr>
+    <tr><td><strong>Growth path</strong></td><td>INITIATE provides the POC environment. Cashback 80% provides the commercial scaling path. This continuity avoids platform migration after the proof phase.</td></tr>
+  </table>
+
+  <h2>Contact</h2>
+
+  <table>
+    <tr><td style="width:50%"><strong>Jannik Diekmann</strong><br>Founder, GraphCargo AI<br>jdiekmann@graphcargoai.com</td><td><strong>Alexander Schnittcher</strong><br>Founder, GraphCargo AI<br>aschnittcher@graphcargoai.com</td></tr>
+  </table>
+
+  <p style="margin-top:12px;font-size:9pt;color:#999">GraphCargo AI | graphcargoai.com | April 2026</p>
+</div>
+
+</body>
+</html>
