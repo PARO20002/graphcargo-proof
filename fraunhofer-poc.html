@@ -136,7 +136,13 @@ td strong{color:#3B7DDD}
   <div class="info-green info"><p><strong>Proven:</strong> Macro signals predict air cargo yields across corridors (r up to 0.89, 4-6W lead). Knowledge graph models causal chains. 430K+ real AWBs validate the approach.</p></div>
   <div class="info-amber info"><p><strong>Not yet proven:</strong> Causal direction (Granger), seasonal independence (STL), out-of-sample accuracy (backtest), full-scale graph analytics (HPC needed), sea freight transferability.</p></div>
 
-  <h1 style="margin-top:18px">3. Proposed Research Consortium</h1>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 3 | Confidential</span></div>
+</div>
+
+<!-- ===== PAGE 4: CONSORTIUM + HORIZON + WHAT WE NEED ===== -->
+<div class="page">
+
+  <h1>3. Proposed Research Consortium</h1>
 
   <table>
     <tr><th>Partner</th><th>Role</th><th>Contribution</th><th>Status</th></tr>
@@ -147,15 +153,14 @@ td strong{color:#3B7DDD}
     <tr><td><strong>TAC Index</strong></td><td>Data Partner</td><td>BAI market indices, TAC Freight route rates, TAC Space actual flight data (Spire ADS-B)</td><td>Licensing in discussion</td></tr>
   </table>
 
-  <h2>3.1 Horizon Europe Alignment</h2>
-  <p>The proposed research aligns with Horizon Europe Cluster 5 (Climate, Energy and Mobility) and the EU strategic priority of supply chain resilience and open strategic autonomy.</p>
+  <h2>3.1 Horizon Europe Alignment (Cluster 5 — Climate, Energy and Mobility)</h2>
 
   <table>
-    <tr><th>Horizon Criterion</th><th>How We Address It</th></tr>
-    <tr><td>Scientific excellence</td><td>Novel application of Granger causality and graph data science to logistics disruption propagation. No existing academic work connects macro signals to route-level air cargo outcomes through a causal knowledge graph.</td></tr>
-    <tr><td>Impact</td><td>Early warning system for air freight disruptions with 4-6 week lead time. Directly applicable to European carrier and forwarder decision-making. Transferable to sea freight for full multimodal coverage.</td></tr>
-    <tr><td>Implementation</td><td>PoC already built with real industry data. Consortium combines academic rigour (Fraunhofer), technology (GraphCargo), industry validation (WFC), and EU-sovereign HPC (MeluXina). 24-month research timeline.</td></tr>
-    <tr><td>European added value</td><td>All infrastructure EU-hosted (Supabase EU, Neo4j EU, MeluXina Luxembourg). GDPR-compliant. European data sovereignty by design. Strengthens EU logistics intelligence independence.</td></tr>
+    <tr><th>Criterion</th><th>How We Address It</th></tr>
+    <tr><td>Scientific excellence</td><td>Novel: Granger causality + graph data science applied to logistics disruption propagation. No prior work connects macro signals to route-level cargo outcomes via causal knowledge graph.</td></tr>
+    <tr><td>Impact</td><td>4-6 week early warning for air freight disruptions. Transferable to sea freight. Applicable to EU carrier and forwarder decision-making.</td></tr>
+    <tr><td>Implementation</td><td>PoC built with real data. Consortium: Fraunhofer (research), GraphCargo (tech), WFC (industry), MeluXina (HPC). 24 months.</td></tr>
+    <tr><td>EU added value</td><td>All infrastructure EU-hosted. GDPR-compliant. European data sovereignty. Strengthens logistics intelligence independence.</td></tr>
   </table>
 
   <h2>3.2 Research Work Packages</h2>
@@ -181,26 +186,26 @@ td strong{color:#3B7DDD}
   </div>
   <p>For research, we can provide Fraunhofer with anonymised correlation data (163K pairs), signal time series (58 signals), and the Neo4j knowledge graph immediately. Aggregated yield data and full AWB access require NDA and WFC consent.</p>
 
-  <h2>4.3 The Transferability Argument: Air to Sea</h2>
+  <h2>4.2 Transferability: Air Freight to Sea Freight</h2>
   <table>
-    <tr><th>Air Freight (PoC)</th><th>Sea Freight (Extension)</th><th>Substitution</th></tr>
-    <tr><td>BAI Index (Baltic Air Freight)</td><td>BDI (Baltic Dry Index) / SCFI (Shanghai Containerized)</td><td>Market price confirmation layer</td></tr>
-    <tr><td>ADS-B / Spire (actual flights)</td><td>AIS (Automatic Identification System)</td><td>Physical vessel tracking</td></tr>
-    <tr><td>OAG (flight schedules)</td><td>Alphaliner / MDS (vessel schedules)</td><td>Planned vs. actual capacity</td></tr>
-    <tr><td>AWBs (Air Waybills)</td><td>B/Ls (Bills of Lading)</td><td>Transaction-level yield data</td></tr>
-    <tr><td>GSCPI, Copper, FAO indices</td><td>Same macro signals</td><td>Identical leading indicators</td></tr>
-    <tr><td>Neo4j Knowledge Graph</td><td>Same graph, extended schema</td><td>Add port nodes, vessel nodes, maritime edges</td></tr>
+    <tr><th>Air (PoC)</th><th>Sea (Extension)</th><th>Function</th></tr>
+    <tr><td>BAI (Baltic Air Freight)</td><td>BDI / SCFI</td><td>Market price confirmation</td></tr>
+    <tr><td>ADS-B / Spire</td><td>AIS vessel tracking</td><td>Physical confirmation</td></tr>
+    <tr><td>OAG schedules</td><td>Alphaliner / MDS</td><td>Planned vs. actual capacity</td></tr>
+    <tr><td>AWBs</td><td>Bills of Lading</td><td>Transaction-level yield</td></tr>
+    <tr><td>GSCPI, Copper, FAO</td><td>Same signals</td><td>Leading indicators (identical)</td></tr>
+    <tr><td>Neo4j graph</td><td>Same graph + port/vessel nodes</td><td>Extended schema</td></tr>
   </table>
 
   <div class="info-green info">
-    <p><strong>The core methodology is mode-agnostic.</strong> The causal knowledge graph connects macro-economic signals to transport outcomes through market indices and physical tracking data. The graph schema, the correlation engine, and the Granger validation pipeline remain identical. Only the data sources change. This makes the air freight PoC a proof of method, not just a proof of market.</p>
+    <p><strong>The methodology is mode-agnostic.</strong> The causal knowledge graph, the correlation engine, and the Granger validation pipeline remain identical across transport modes. Only the data sources change. Air freight is a proof of method, not just a proof of market.</p>
   </div>
 
   <h2>Contact</h2>
   <table>
     <tr><td style="width:50%"><strong>Jannik Diekmann</strong><br>Founder, GraphCargo AI<br>jdiekmann@graphcargoai.com</td><td><strong>Alexander Schnittcher</strong><br>Founder, GraphCargo AI<br>aschnittcher@graphcargoai.com</td></tr>
   </table>
-  <p style="margin-top:8px;font-size:9pt;color:#999">GraphCargo AI | graphcargoai.com | April 2026</p>
+  <p style="margin-top:6px;font-size:8.5pt;color:#999">GraphCargo AI | graphcargoai.com | April 2026</p>
 
 </div>
 
