@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphCargo AI — TAC Index Partnership</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8fafc;--p:#ffffff;--bd:#e2e8f0;--t:#0f172a;--dim:#64748b;--ac:#1a6fc5;--g:#059669;--r:#dc2626;--section:#f1f5f9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);font-size:14px;line-height:1.7}
+
+.container{max-width:960px;margin:0 auto;padding:0 24px}
+
+/* Header */
+.hero{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;padding:48px 0 40px;text-align:center}
+.hero-logos{display:flex;justify-content:center;align-items:center;gap:24px;margin-bottom:24px}
+.hero-logo{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.hero-logo.gc{color:#3b82f6}.hero-logo.tac{color:#f59e0b}
+.hero-x{color:#64748b;font-size:16px}
+.hero h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.hero p{color:#94a3b8;font-size:15px;max-width:600px;margin:0 auto}
+
+/* Sections */
+.section{padding:40px 0;border-bottom:1px solid var(--bd)}
+.section:last-of-type{border-bottom:none}
+.section-tag{font-size:11px;font-weight:700;color:var(--ac);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.section h2{font-size:22px;font-weight:700;margin-bottom:12px;color:var(--t)}
+.section p{color:var(--dim);max-width:700px}
+
+/* Architecture Flow */
+.flow{display:flex;align-items:stretch;gap:0;margin:28px 0;overflow-x:auto}
+.flow-step{flex:1;min-width:160px;text-align:center;position:relative;padding:0 8px}
+.flow-step::after{content:'';position:absolute;top:36px;left:50%;width:100%;height:3px;z-index:0}
+.flow-step:last-child::after{display:none}
+.flow-step.s1::after{background:linear-gradient(90deg,#8b5cf6,#3b82f6)}
+.flow-step.s2::after{background:linear-gradient(90deg,#3b82f6,#f59e0b)}
+.flow-step.s3::after{background:linear-gradient(90deg,#f59e0b,#059669)}
+.flow-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px;position:relative;z-index:1;border:3px solid}
+.flow-icon.macro{background:#f5f3ff;border-color:#8b5cf6}
+.flow-icon.tac{background:#fffbeb;border-color:#f59e0b}
+.flow-icon.output{background:#ecfdf5;border-color:#059669}
+.flow-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.flow-title.purple{color:#8b5cf6}
+.flow-title.amber{color:#d97706}
+.flow-title.green{color:#059669}
+.flow-desc{font-size:11px;color:var(--dim);line-height:1.4}
+
+/* TAC Highlight Box */
+.tac-box{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #f59e0b;border-radius:12px;padding:24px 28px;margin:24px 0;position:relative}
+.tac-box::before{content:'TAC INDEX';position:absolute;top:-10px;left:20px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;letter-spacing:.5px}
+.tac-box h3{font-size:16px;font-weight:700;color:#92400e;margin-bottom:8px}
+.tac-box p{color:#78350f;font-size:13px}
+
+/* What we DO / DON'T cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+@media(max-width:700px){.cards{grid-template-columns:1fr}}
+.card{border-radius:10px;padding:24px;border:2px solid}
+.card.do{background:#ecfdf5;border-color:#059669}
+.card.dont{background:#fef2f2;border-color:#dc2626}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card.do h3{color:#059669}
+.card.dont h3{color:#dc2626}
+.card ul{list-style:none;padding:0}
+.card li{padding:6px 0;font-size:13px;color:var(--t);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.card li::before{content:'';flex-shrink:0;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px}
+.card.do li::before{content:'✓';background:#d1fae5;color:#059669}
+.card.dont li::before{content:'✗';background:#fee2e2;color:#dc2626}
+
+/* Proof section */
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+@media(max-width:700px){.proof-grid{grid-template-columns:1fr}}
+.proof-card{background:var(--p);border:1px solid var(--bd);border-radius:10px;padding:20px;text-align:center}
+.proof-card .val{font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.proof-card .val.green{color:#059669}.proof-card .val.blue{color:#1a6fc5}.proof-card .val.amber{color:#d97706}
+.proof-card .label{font-size:11px;color:var(--dim);margin-top:4px}
+.proof-card .detail{font-size:12px;color:var(--t);margin-top:8px;line-height:1.5}
+
+/* Data flow table */
+.dtbl{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+.dtbl th{background:var(--section);padding:10px 14px;text-align:left;font-weight:600;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--bd)}
+.dtbl td{padding:10px 14px;border-bottom:1px solid var(--bd);vertical-align:top}
+.dtbl tr:hover{background:var(--section)}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.pill-amber{background:#fef3c7;color:#92400e}
+.pill-purple{background:#f5f3ff;color:#6d28d9}
+.pill-green{background:#d1fae5;color:#065f46}
+.pill-blue{background:#dbeafe;color:#1e40af}
+
+/* Example diagram */
+.example{background:var(--p);border:1px solid var(--bd);border-radius:10px;padding:24px;margin:24px 0}
+.example h4{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--ac)}
+.example-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;margin:12px 0}
+.ef-box{padding:8px 14px;border-radius:6px;font-weight:600;font-size:12px;white-space:nowrap}
+.ef-macro{background:#f5f3ff;color:#6d28d9;border:1px solid #c4b5fd}
+.ef-tac{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.ef-output{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
+.ef-arrow{color:var(--dim);font-size:16px}
+.ef-label{font-size:10px;color:var(--dim);display:block;margin-top:2px;font-weight:400}
+
+.footer{padding:24px 0;text-align:center;font-size:11px;color:var(--dim);border-top:1px solid var(--bd)}
+.footer a{color:var(--ac)}
+
+.badge-demo{display:inline-flex;align-items:center;gap:6px;background:#fffbeb;border:1px solid #fcd34d;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;color:#92400e;margin:16px 0}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-logos">
+    <span class="hero-logo gc">GraphCargo AI</span>
+    <span class="hero-x">&times;</span>
+    <span class="hero-logo tac">TAC Index</span>
+  </div>
+  <h1>Data Partnership Overview</h1>
+  <p>How TAC Index data fits into the GraphCargo causal intelligence engine — and what we do (and don't do) with it.</p>
+</div>
+
+<div class="container">
+
+<!-- ===== SECTION 1: ROLE OF TAC ===== -->
+<div class="section">
+  <div class="section-tag">The Role of TAC Index</div>
+  <h2>TAC is our Confirmation Layer — not the product</h2>
+  <p>GraphCargo combines 15+ data sources into a causal model that predicts air cargo yield movements. TAC Index serves one specific role: <strong>market confirmation</strong>. It sits between macro-economic leading indicators and the actual yield outcome.</p>
+
+  <div class="flow">
+    <div class="flow-step s1">
+      <div class="flow-icon macro">&#x1F4C8;</div>
+      <div class="flow-title purple">LEADING SIGNALS</div>
+      <div class="flow-desc">FRED, NY Fed GSCPI,<br>FAO, Comtrade<br><strong>Predict 4–6 weeks ahead</strong></div>
+    </div>
+    <div class="flow-step s2">
+      <div class="flow-icon tac">&#x2708;&#xFE0F;</div>
+      <div class="flow-title amber">TAC INDEX</div>
+      <div class="flow-desc">BAI Spot, TAC Freight,<br>TAC Space (Spire ADS-B)<br><strong>Confirms 1–4 weeks ahead</strong></div>
+    </div>
+    <div class="flow-step s3">
+      <div class="flow-icon output">&#x1F4B0;</div>
+      <div class="flow-title green">DERIVED OUTPUT</div>
+      <div class="flow-desc">Corridor scores,<br>yield forecasts, alerts<br><strong>No raw TAC data visible</strong></div>
+    </div>
+  </div>
+
+  <div class="tac-box">
+    <h3>Why TAC Index is essential</h3>
+    <p>Without TAC: We can detect macro shifts, but we can't confirm whether the air cargo market has reacted yet.<br>
+    <strong>With TAC:</strong> BAI indices confirm the price signal. TAC Space confirms physically (actual flights vs. schedule). This turns a statistical hypothesis into a validated forecast.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: WHAT WE DO ===== -->
+<div class="section">
+  <div class="section-tag">Data Usage</div>
+  <h2>What we do — and what we will never do</h2>
+
+  <div class="cards">
+    <div class="card do">
+      <h3>&#x2705; What we do with TAC data</h3>
+      <ul>
+        <li><strong>Classical statistics:</strong> Pearson correlation, lag analysis, seasonal decomposition, Granger causality testing</li>
+        <li><strong>One signal among 15+:</strong> TAC is combined with OAG, FRED, FAO, GSCPI, WACD, Comtrade — never used in isolation</li>
+        <li><strong>Derived composite scores:</strong> Corridor condition scores that blend multiple sources — no raw TAC values exposed</li>
+        <li><strong>Full attribution:</strong> "Data by TAC Index" badge wherever TAC data contributes</li>
+        <li><strong>Internal time-series storage:</strong> For rolling-window backtesting and historical pattern matching</li>
+      </ul>
+    </div>
+    <div class="card dont">
+      <h3>&#x1F6AB; What we will never do</h3>
+      <ul>
+        <li><strong>No LLM training:</strong> TAC data is never used to train language models, create embeddings, or fine-tune generative AI</li>
+        <li><strong>No competing index:</strong> We will never publish a rate benchmark or settlement product</li>
+        <li><strong>No raw data exposure:</strong> End users cannot download, export, or reconstruct TAC raw data</li>
+        <li><strong>No redistribution:</strong> TAC data is never resold, sublicensed, or shared with third parties</li>
+        <li><strong>No scraping:</strong> We will use licensed API access only — no web scraping of TAC platforms</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: HOW IT WORKS TECHNICALLY ===== -->
+<div class="section">
+  <div class="section-tag">Technical Architecture</div>
+  <h2>How TAC data flows through our system</h2>
+  <p>TAC data enters as one input signal, gets correlated with 14 other sources, and leaves as a blended corridor score. At no point can raw TAC values be extracted from the output.</p>
+
+  <table class="dtbl">
+    <tr><th>Step</th><th>What happens</th><th>TAC data state</th></tr>
+    <tr>
+      <td><span class="pill pill-amber">INGEST</span></td>
+      <td>TAC API delivers BAI, TAC Freight, and TAC Space data via licensed feed</td>
+      <td>Raw values stored in internal database (encrypted, access-controlled)</td>
+    </tr>
+    <tr>
+      <td><span class="pill pill-purple">CORRELATE</span></td>
+      <td>Signal engine computes Pearson correlation with lag (1–12 weeks) against every lane &times; commodity pair from WFC/customer AWB data</td>
+      <td>TAC values become one feature in a multi-source correlation matrix (163,000+ pairs)</td>
+    </tr>
+    <tr>
+      <td><span class="pill pill-blue">GRAPH</span></td>
+      <td>Statistically significant relationships are written to Neo4j knowledge graph as CONFIRMS or PREDICTS edges</td>
+      <td>Only the relationship metadata (r, lag, direction) — not the raw TAC value</td>
+    </tr>
+    <tr>
+      <td><span class="pill pill-green">OUTPUT</span></td>
+      <td>Customer sees: "Corridor EU&rarr;NAM: Yield rising, confidence 8.3/10, 4-week horizon"</td>
+      <td><strong>No raw TAC data visible.</strong> Only derived score + "Data by TAC Index" attribution</td>
+    </tr>
+  </table>
+
+  <div class="example">
+    <h4>Concrete Example: FRA&rarr;PVG Corridor</h4>
+    <div class="example-flow">
+      <div class="ef-box ef-macro">Copper +9.1%<span class="ef-label">FRED (Leading)</span></div>
+      <div class="ef-arrow">&rarr;</div>
+      <div class="ef-box ef-tac">BAI80 PVG +28%<span class="ef-label">TAC Index (Confirmation)</span></div>
+      <div class="ef-arrow">&rarr;</div>
+      <div class="ef-box ef-tac">LH8426 extra freighter<span class="ef-label">TAC Space (Physical)</span></div>
+      <div class="ef-arrow">&rarr;</div>
+      <div class="ef-box ef-output">Score: 8.7 / 10<span class="ef-label">Customer sees this</span></div>
+    </div>
+    <p style="font-size:12px;color:var(--dim);margin-top:12px">The customer sees a corridor confidence score and a directional forecast. They do <strong>not</strong> see "BAI80 = 5,689" or any raw TAC value. TAC's contribution is acknowledged via attribution badge.</p>
+
+    <div class="badge-demo">&#x1F4CA; Data by TAC Index</div>
+    <span style="font-size:11px;color:var(--dim)"> &larr; This badge appears wherever TAC data contributes to the output</span>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: POC RESULTS ===== -->
+<div class="section">
+  <div class="section-tag">Proof of Concept Results</div>
+  <h2>What we proved with publicly available BAI data</h2>
+  <p>Using only the public BAI ticker (hub-level, weekly), we validated the causal model. With licensed TAC data, these results become route-level and daily.</p>
+
+  <div class="proof-grid">
+    <div class="proof-card">
+      <div class="val green">r = 0.857</div>
+      <div class="label">BAI80 (PVG) &rarr; WFC Yield (Asia&rarr;NAM)</div>
+      <div class="detail">BAI80 Shanghai Outbound confirms yield movements on Asia&rarr;North America with 4 weeks lead time. Based on 429 weeks of BAI history.</div>
+    </div>
+    <div class="proof-card">
+      <div class="val amber">+28%</div>
+      <div class="label">BAI80 Surge, March&ndash;April 2026</div>
+      <div class="detail">BAI80 rose from 4,445 to 5,689 in 5 weeks. Our macro signals (Copper, GSCPI) had flagged this 4 weeks earlier.</div>
+    </div>
+    <div class="proof-card">
+      <div class="val blue">LH8426</div>
+      <div class="label">Extra Freighter discovered via TAC Space</div>
+      <div class="detail">Lufthansa Cargo B777-200F on FRA&rarr;PVG (Apr 9) — not in OAG schedule. Physical confirmation of demand surge during BAI80 spike.</div>
+    </div>
+    <div class="proof-card">
+      <div class="val green">443 lanes</div>
+      <div class="label">Predictable with r &ge; 0.7</div>
+      <div class="detail">Out of ~800 active lanes, 443 have at least one leading macro signal. 130 lanes have r &ge; 0.95. BAI confirmation strengthens all of them.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: WHAT WE NEED ===== -->
+<div class="section">
+  <div class="section-tag">Licensing Request</div>
+  <h2>What we are asking for</h2>
+
+  <table class="dtbl">
+    <tr><th>TAC Product</th><th>What it gives us</th><th>What we build with it</th></tr>
+    <tr>
+      <td><strong>BAI Daily Spot</strong></td>
+      <td>Daily hub-level price signals (currently we only have weekly from public ticker)</td>
+      <td>Real-time confirmation layer. Intraday signal detection instead of weekly lag.</td>
+    </tr>
+    <tr>
+      <td><strong>BAI Freight</strong></td>
+      <td>Historical depth across corridors</td>
+      <td>Seasonal decomposition, Granger causality tests, rolling-window backtesting</td>
+    </tr>
+    <tr>
+      <td><strong>TAC Freight</strong></td>
+      <td>Route-level rates (CN&rarr;US, DE&rarr;AE, etc.)</td>
+      <td>Lane-specific yield forecasts instead of hub-level approximations</td>
+    </tr>
+    <tr>
+      <td><strong>TAC Space</strong></td>
+      <td>Spire ADS-B actual flights vs. schedule</td>
+      <td>Systematic extra-flight detection as a physical demand signal</td>
+    </tr>
+  </table>
+
+  <div class="tac-box" style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#059669">
+    <div style="position:absolute;top:-10px;left:20px;background:#059669;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;letter-spacing:.5px">SUMMARY</div>
+    <h3 style="color:#065f46">TAC Index makes our forecasts better — we make TAC Index more visible</h3>
+    <p style="color:#064e3b">Every airline, GSA, and freight forwarder using GraphCargo will see "Data by TAC Index" attribution. TAC gains distribution into a new market intelligence channel. GraphCargo gains the confirmation layer that completes our causal chain. This is a mutually beneficial data partnership.</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  GraphCargo AI | <a href="mailto:jdiekmann@graphcargoai.com">jdiekmann@graphcargoai.com</a> | <a href="mailto:aschnittcher@graphcargoai.com">aschnittcher@graphcargoai.com</a><br>
+  <a href="dashboard.html">Full Technical Dashboard</a> &middot; April 2026
+</div>
+
+</body>
+</html>
