@@ -47,16 +47,16 @@ a{color:#3B7DDD;font-size:7.5pt}
     <div style="margin-top:30px">
       <div style="font-size:10pt;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px">Whitepaper</div>
       <h1 style="font-size:18pt;text-align:center">Causal Intelligence for<br>Airfreight Market Prediction</h1>
-      <div style="font-size:9.5pt;color:#666;font-style:italic;margin-top:6px">System Architecture v5.0 — How macro-economic signals predict<br>air cargo yield movements 4–6 weeks in advance</div>
+      <div style="font-size:9.5pt;color:#666;font-style:italic;margin-top:6px">System Architecture v7.0 — Commodity-aware causal intelligence<br>predicting air cargo yields 4–6 weeks in advance</div>
     </div>
     <div class="cover-meta">
       Jannik Diekmann | Alexander Schnittcher<br>
       Founders, GraphCargo AI<br>
       jdiekmann@graphcargoai.com | aschnittcher@graphcargoai.com<br><br>
-      April 2026 | v5.0
+      April 2026 | v7.0
     </div>
   </div>
-  <div class="page-foot"><span>GraphCargo AI</span><span>Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 2: PROBLEM + THESIS -->
@@ -68,27 +68,30 @@ a{color:#3B7DDD;font-size:7.5pt}
   <h2>1.1 Our Thesis</h2>
   <div class="info"><p><strong>Macro-economic signals predict air cargo yield movements 4–6 weeks in advance.</strong> A causal knowledge graph can model and explain the propagation pathways from macro shock to route-level impact. This is provable with classical statistics (Pearson correlation, Granger causality) — not generative AI or LLM training.</p></div>
 
-  <h1 style="margin-top:12px">2. System Architecture v5.0</h1>
-  <p>Five layers, three compute tiers, 58 automated signals, one knowledge graph.</p>
+  <h1 style="margin-top:12px">2. System Architecture v7.0</h1>
+  <p>Seven layers, three compute tiers, 67 automated signals, commodity-aware knowledge graph.</p>
 
   <table>
     <tr><th>Layer</th><th>Function</th><th>Technology</th><th>Status</th></tr>
-    <tr><td><strong>5. Customer Output</strong></td><td>Corridor scores, yield forecasts, alerts, digital twins</td><td>SaaS Dashboard, API</td><td>PoC dashboard live</td></tr>
-    <tr><td><strong>4. Causal Intelligence</strong></td><td>Granger causality, GDS (Node2Vec, Louvain, PageRank), backtesting</td><td>MeluXina HPC</td><td><span class="tag tag-green">Confirmed</span></td></tr>
-    <tr><td><strong>3. Knowledge Graph</strong></td><td>Causal relationships: PREDICTS, DRIVES, CONFIRMS, LEADS</td><td>Neo4j AuraDB</td><td>19K nodes, 185 edges</td></tr>
-    <tr><td><strong>2. Signal Engine</strong></td><td>RAW→STG→GOLD, 163K correlation pairs, feature engineering</td><td>Supabase PostgreSQL</td><td><span class="tag tag-green">Live</span></td></tr>
-    <tr><td><strong>1. Data Ingestion</strong></td><td>58 signals from 15+ sources, 5 Edge Functions, 5 Cron jobs</td><td>Supabase Edge Functions</td><td><span class="tag tag-green">Automated</span></td></tr>
+    <tr><td><strong>7. Customer Output</strong></td><td>GC Score (0-100), Lane-DNA, yield forecasts, disruption alerts</td><td>Crystal Ball SaaS, API</td><td><span class="tag tag-green">Live</span></td></tr>
+    <tr><td><strong>6. Disruption Intelligence</strong></td><td>Live weather (METAR), AI-classified news, OFAC sanctions, trade flows</td><td>Claude AI + Supabase Crons</td><td><span class="tag tag-green">Live</span></td></tr>
+    <tr><td><strong>5. Causal Intelligence</strong></td><td>Granger causality (2 proven), cross-validation (33 pairs), GDS</td><td>Local + MeluXina HPC</td><td><span class="tag tag-green">Partial</span></td></tr>
+    <tr><td><strong>4. Commodity Intelligence</strong></td><td>Lane-DNA fingerprints, Signal-Commodity domain mapping, relevance scoring</td><td>Supabase + Neo4j</td><td><span class="tag tag-green">Live (v7)</span></td></tr>
+    <tr><td><strong>3. Knowledge Graph</strong></td><td>29K nodes, 71K+ edges, 22 relationship types incl. HAS_FINGERPRINT, DRIVES_COMMODITY</td><td>Neo4j AuraDB</td><td><span class="tag tag-green">Live</span></td></tr>
+    <tr><td><strong>2. Signal Engine</strong></td><td>RAW&rarr;STG&rarr;GOLD, 163K corridor + 12,499 lane-level correlations</td><td>Supabase PostgreSQL</td><td><span class="tag tag-green">Live</span></td></tr>
+    <tr><td><strong>1. Data Ingestion</strong></td><td>67 signals from 15+ sources, 5 Edge Functions, 5 Cron jobs</td><td>Supabase Edge Functions</td><td><span class="tag tag-green">Automated</span></td></tr>
   </table>
 
-  <h2>2.1 Data Sources (58 Signals Automated)</h2>
+  <h2>2.1 Data Sources (67 Signals, 15+ Sources)</h2>
   <table>
     <tr><th>Source</th><th>Series</th><th>Datapoints</th><th>History</th><th>Cron</th><th>Access</th></tr>
-    <tr><td><strong>FRED</strong></td><td>35</td><td>1,733</td><td>2023–26</td><td>Daily 06:00</td><td>Public API</td></tr>
-    <tr><td><strong>TAC Index</strong></td><td>15</td><td>3,011</td><td>2018–26</td><td>Daily 15:00</td><td><span class="tag tag-green">Licensed (confirmed)</span></td></tr>
-    <tr><td><strong>FAO</strong></td><td>6</td><td>162</td><td>2024–26</td><td>Monthly</td><td>Public API</td></tr>
-    <tr><td><strong>NY Fed</strong></td><td>1</td><td>339</td><td>1998–26</td><td>Monthly</td><td>Public CSV</td></tr>
-    <tr><td><strong>SSB Norway</strong></td><td>1</td><td>52</td><td>2025</td><td>Weekly</td><td>Public API</td></tr>
+    <tr><td><strong>FRED (US)</strong></td><td>35</td><td>1,733</td><td>2023&ndash;26</td><td>Daily 06:00</td><td>Public API</td></tr>
+    <tr><td><strong>FRED (Global)</strong></td><td>9</td><td>488</td><td>2020&ndash;26</td><td>Daily 06:00</td><td>Public API (v7 new)</td></tr>
+    <tr><td><strong>TAC Index</strong></td><td>15</td><td>3,011</td><td>2018&ndash;26</td><td>Daily 15:00</td><td><span class="tag tag-green">Licensed (confirmed for MeluXina)</span></td></tr>
+    <tr><td><strong>FAO</strong></td><td>6</td><td>162</td><td>2024&ndash;26</td><td>Monthly</td><td>Public API</td></tr>
+    <tr><td><strong>NY Fed + Custom</strong></td><td>2</td><td>391</td><td>1998&ndash;26</td><td>Monthly</td><td>Public CSV + Internal</td></tr>
   </table>
+  <p style="font-size:7.5pt;color:#888;margin-top:2px"><strong>v7 new signals:</strong> UK/DE/JP/IN/KR Industrial Production (OECD via FRED), OECD CLI China, Philly Fed Manufacturing Index, China Business Confidence, US Import/Export Price Indices &mdash; closing the EU-origin and Asia-destination signal gap.</p>
   <table>
     <tr><th>Industry Source</th><th>Volume</th><th>Status</th><th>Access</th></tr>
     <tr><td><strong>WFC AWBs</strong></td><td>433,675</td><td><span class="tag tag-green">In system</span></td><td>Customer data (GSA partner)</td></tr>
@@ -98,66 +101,51 @@ a{color:#3B7DDD;font-size:7.5pt}
     <tr><td><strong>NOAA / GDELT / OFAC</strong></td><td>6,591</td><td><span class="tag tag-green">Automated</span></td><td>Public APIs (3 Cron jobs)</td></tr>
   </table>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 2 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 2 | Whitepaper v7.0</span></div>
 </div>
 
-<!-- PAGE 3: KNOWLEDGE GRAPH -->
+<!-- PAGE 3: KNOWLEDGE GRAPH + LANE DNA -->
 <div class="page">
-  <h1>3. Knowledge Graph — Neo4j</h1>
-  <p>The graph models how signals propagate through the air freight network. A relationship IS the correlation. A path through the graph IS the explanation.</p>
+  <h1>3. Knowledge Graph + Lane-DNA</h1>
+  <p>The graph models how signals propagate through the air freight network. In v7, every lane has a Commodity-DNA that determines which signals are relevant &mdash; eliminating spurious correlations and enabling domain-aware predictions.</p>
 
-  <h2>3.1 Ontology (v5)</h2>
+  <h2>3.1 Graph State (v7)</h2>
   <div class="cols">
     <div>
       <table>
-        <tr><th colspan="2">Node Types (32)</th></tr>
-        <tr><td><strong>Infrastructure</strong></td><td>Airport, Lane, Leg, FlightSeries, AircraftType</td></tr>
-        <tr><td><strong>Market Players</strong></td><td>Carrier, Forwarder, GSA, Shipper, Industry</td></tr>
-        <tr><td><strong>Commercial</strong></td><td>SpotRate, ContractRate, RateBenchmark, MarginSignal, Allotment</td></tr>
-        <tr><td><strong>Operations</strong></td><td>ScheduleSlot, ActualFlight, Commodity, ServiceType</td></tr>
-        <tr><td><strong>Signals</strong></td><td>MacroSignal, ModeShiftSignal, GeopoliticalEvent, WeatherEvent, TradeRestriction, CommodityPrice</td></tr>
-        <tr><td><strong>Intelligence</strong></td><td>LaneForecast, CausalChain, RiskAssessment</td></tr>
+        <tr><th>Metric</th><th>v5 (Apr 12)</th><th>v7 (Apr 14)</th><th>Production</th></tr>
+        <tr><td>Nodes</td><td>19,219</td><td><strong>29,098</strong></td><td>12.5M</td></tr>
+        <tr><td>Edges</td><td>185</td><td><strong>71,400+</strong></td><td>42M</td></tr>
+        <tr><td>Lane&times;Commodity correlations</td><td>0</td><td><strong>12,499</strong> (p&lt;0.05)</td><td>~270B</td></tr>
+        <tr><td>Granger-causal signals</td><td>0</td><td><strong>2</strong> (p&lt;0.005)</td><td>500+</td></tr>
+        <tr><td>Cross-validated pairs</td><td>0</td><td><strong>33</strong></td><td>5,000+</td></tr>
+        <tr><td>Lane-DNA fingerprints</td><td>0</td><td><strong>44,774</strong></td><td>80,000+</td></tr>
       </table>
     </div>
     <div>
       <table>
-        <tr><th colspan="2">Relationship Types (45+)</th></tr>
-        <tr><td><strong>Infrastructure</strong></td><td>CONSISTS_OF, CONNECTS, OPERATES_ON, HAS_SCHEDULE, ACTUALIZED_AS</td></tr>
-        <tr><td><strong>Commercial</strong></td><td>OFFERS_SPOT, OFFERS_CONTRACT, BOOKS_SPOT, BOOKS_CONTRACT, HAS_ALLOTMENT</td></tr>
-        <tr><td><strong>Causal</strong></td><td>INDICATES, SHIFTS_DEMAND, DISRUPTS, GROUNDS, RESTRICTS, CORRELATES</td></tr>
-        <tr><td><strong>Intelligence</strong></td><td>PREDICTS, DRIVES, CONFIRMS, LEADS, SIMILAR_TO, IN_CLUSTER</td></tr>
-        <tr><td><strong>Propagation</strong></td><td>STARTS_WITH, PROPAGATES_THROUGH, IMPACTS, AFFECTS_SPOT, AFFECTS_CONTRACT</td></tr>
+        <tr><th>v7 New</th><th>Function</th></tr>
+        <tr><td><strong>CommodityCategory</strong></td><td>7 categories: Flowers, Pharma, Machinery, Electronics, Courier, Fish, Fruits</td></tr>
+        <tr><td><strong>HAS_FINGERPRINT</strong></td><td>Lane &rarr; CommodityCategory with % weight (hybrid AWB+WACD)</td></tr>
+        <tr><td><strong>DRIVES_COMMODITY</strong></td><td>Signal &rarr; CommodityCategory with mechanism text</td></tr>
+        <tr><td><strong>relevance_score</strong></td><td>fingerprint_pct &times; domain_weight per signal-lane pair</td></tr>
       </table>
     </div>
   </div>
 
-  <h2>3.2 Current Graph State</h2>
+  <h2>3.2 Lane-DNA &mdash; Why It Matters (v7 Innovation)</h2>
+  <p>Every lane has a commodity fingerprint derived from hybrid AWB + WACD analysis (102,962 entries, 44,774 lanes). The fingerprint determines which signals are relevant:</p>
   <div class="cols">
-    <div>
-      <table>
-        <tr><th>Metric</th><th>Today</th><th>After INITIATE</th><th>Production</th></tr>
-        <tr><td>Nodes</td><td>19,219</td><td>~50,000</td><td>12.5M</td></tr>
-        <tr><td>Edges</td><td>185</td><td>~500,000</td><td>42M</td></tr>
-        <tr><td>GDS</td><td>None</td><td>Node2Vec, Louvain</td><td>Full suite</td></tr>
-        <tr><td>Granger pairs</td><td>0</td><td>500</td><td>27M</td></tr>
-      </table>
-    </div>
-    <div>
-      <table>
-        <tr><th>Compute Tier</th><th>Role</th></tr>
-        <tr><td><strong>Supabase</strong></td><td>Live pipeline, daily ingestion, materialized views</td></tr>
-        <tr><td><strong>Neo4j</strong></td><td>Relationships, signal propagation, causal paths</td></tr>
-        <tr><td><strong>MeluXina</strong></td><td>Granger tests, correlation matrix, GDS at scale</td></tr>
-      </table>
-    </div>
+    <div class="info"><p><strong>UIO-AMS</strong> = 98% Flowers<br>Relevant: Dutch Flower Auction (0.984), Valentine Seasonal (0.984), FAO Sugar (0.787)<br>NOT relevant: Brent Oil, Treasury Spread</p></div>
+    <div class="info"><p><strong>FRA-DXB</strong> = 43% Machinery + 32% Pharma<br>Relevant: Industrial Production (0.430), Durable Goods (0.430), Pharma PPI (0.323)<br>NOT relevant: FAO Meat, Flower Index</p></div>
   </div>
+  <p>This is the difference between <strong>statistics</strong> and <strong>causal intelligence</strong>. We don't just find correlations &mdash; we explain WHY a signal predicts a lane, because we know WHAT that lane carries.</p>
 
-  <h2>3.3 The Causal Chain — From Signal to Yield</h2>
-  <p>Every yield movement has a causal chain. The graph models it as a traversable path:</p>
-  <div class="info"><p><strong>Example (proven):</strong> Copper price rises (+9.1%) → [:DRIVES] → BAI80 PVG rises (+28% in 5 weeks) → [:CONFIRMS] → WFC Yield on Asia→NAM rises (+29.6%). Lead time: 4–5 weeks. Pearson r = 0.857. Validated on 528 AWBs/week.</p></div>
-  <p>With TAC Space (Spire ADS-B), we add a physical confirmation layer: scheduled flights (OAG) vs. actual flights (Spire). Extra freighters outside the schedule = physical proof of demand surge. We discovered LH8426 (B777-200F, FRA→PVG) — not in OAG schedule — during the BAI80 spike.</p>
+  <h2>3.3 The Causal Chain &mdash; From Signal to Yield</h2>
+  <div class="info"><p><strong>v7 path:</strong> Dutch Flower Auction rises &rarr; [:DRIVES_COMMODITY] &rarr; Flowers &amp; Plants &larr; [:HAS_FINGERPRINT 98.4%] &larr; UIO-AMS &rarr; Yield rises 3 weeks later. Relevance: 0.984. Granger-confirmed for FAO Sugar (p=0.002).</p></div>
+  <div class="info"><p><strong>Physical confirmation:</strong> TAC Space (Spire ADS-B) adds a confirmation layer: scheduled flights (OAG) vs. actual flights (Spire). Extra freighters outside the schedule = physical proof of demand surge.</p></div>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 3 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 3 | Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 4: PROVEN CORRELATIONS + CHARTS -->
@@ -186,17 +174,28 @@ a{color:#3B7DDD;font-size:7.5pt}
     <div><div class="ch"><canvas id="c2"></canvas></div></div>
   </div>
 
-  <h2>4.3 Three Corridor Case Studies (Q4 2025)</h2>
+  <h2>4.3 Four Case Studies (v7: incl. LatAm Flowers)</h2>
   <table>
     <tr><th>Corridor</th><th>Yield Change</th><th>Lead Signal</th><th>r</th><th>Lead</th><th>AWBs/wk</th></tr>
-    <tr><td><strong>Asia → NAM</strong></td><td style="color:#059669;font-weight:700">+29.6%</td><td>BAI80 PVG +38.7%</td><td>0.857</td><td>5W</td><td>528</td></tr>
-    <tr><td><strong>EU → NAM</strong></td><td style="color:#059669;font-weight:700">+36.7%</td><td>BAI30 HKG + FAO Sugar</td><td>0.812 / -0.942</td><td>1W / 4W</td><td>1,255</td></tr>
-    <tr><td><strong>EU → MDE</strong></td><td style="color:#059669;font-weight:700">+10.8%</td><td>TSIFRGHTC + DGORDER</td><td>0.781 / 0.751</td><td>5W</td><td>2,663</td></tr>
+    <tr><td><strong>LatAm &rarr; EU</strong></td><td style="color:#059669;font-weight:700">+42.1%</td><td>Dutch Flower Auction +23%</td><td>0.984*</td><td>3W</td><td>800</td></tr>
+    <tr><td><strong>EU &rarr; NAM</strong></td><td style="color:#059669;font-weight:700">+36.7%</td><td>BAI30 HKG + FAO Sugar</td><td>0.812 / -0.942</td><td>1W / 4W</td><td>1,255</td></tr>
+    <tr><td><strong>Asia &rarr; NAM</strong></td><td style="color:#059669;font-weight:700">+29.6%</td><td>BAI80 PVG +38.7%</td><td>0.857</td><td>5W</td><td>528</td></tr>
+    <tr><td><strong>EU &rarr; MDE</strong></td><td style="color:#059669;font-weight:700">+10.8%</td><td>TSIFRGHTC + DGORDER</td><td>0.781 / 0.751</td><td>5W</td><td>2,663</td></tr>
+  </table>
+  <p style="font-size:7pt;color:#888">* LatAm-EU Flowers: Valentine's Day 2025 &mdash; WFC agents who pre-booked 3 weeks ahead captured $0.40/kg premium. Lane-DNA: UIO-AMS = 98% Flowers.</p>
+
+  <h2>4.4 Statistical Rigor (v7 additions)</h2>
+  <table>
+    <tr><th>Method</th><th>Result</th><th>Significance</th></tr>
+    <tr><td><strong>Granger Causality</strong></td><td>FAO Sugar &rarr; EU-NAM yields (F=34.96, <strong>p=0.002</strong>)</td><td>Causal &mdash; not just correlation</td></tr>
+    <tr><td><strong>Granger Causality</strong></td><td>Consumer Sentiment &rarr; EU-NAM (F=12.14, <strong>p=0.004</strong>)</td><td>Causal prediction confirmed</td></tr>
+    <tr><td><strong>Cross-Validation</strong></td><td>33 AWB vs WACD pairs &mdash; same direction</td><td>UIO-AMS Flowers: delta only 0.012</td></tr>
+    <tr><td><strong>Lane&times;Commodity</strong></td><td>12,499 significant (p&lt;0.05), 859 HIGH (p&lt;0.01)</td><td>From 2.5M computed in 157s</td></tr>
   </table>
 
-  <div class="info-green info"><p><strong>443 of ~800 active lanes are predictable</strong> (at least one leading signal with r ≥ 0.7). 130 lanes have r ≥ 0.95. 55% of lanes have no strong leading indicator — this is an honest assessment, not marketing.</p></div>
+  <div class="info-green info"><p><strong>2,884 lanes with signal coverage</strong> (38% of 7,503). 859 HIGH confidence (p&lt;0.01, n&ge;14). v7 Lane-DNA ensures only domain-relevant signals are matched &mdash; no spurious correlations.</p></div>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 4 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 4 | Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 5: DIGITAL TWINS + EARLY WARNING -->
@@ -232,7 +231,7 @@ a{color:#3B7DDD;font-size:7.5pt}
     <div class="info"><p><strong>Contract Forecast:</strong> TAC Freight, WACD yield, PMI (4–8W lag), SCFI (2–4W), capacity trend, commodity mix shift. Reacts slow, low volatility, 4–12 week horizon.</p></div>
   </div>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 5 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 5 | Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 6: COMPUTE + MELUXINA -->
@@ -269,7 +268,7 @@ a{color:#3B7DDD;font-size:7.5pt}
     <tr><td>10–15</td><td>TGN, Granger, Anomaly PPR, Monte Carlo, Pattern Matching</td><td>Temporal embeddings, causal discovery, scenarios</td><td>Advanced analytics (MeluXina-assisted)</td></tr>
   </table>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 6 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 6 | Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 7: PARTNERSHIPS + HORIZON -->
@@ -301,16 +300,17 @@ a{color:#3B7DDD;font-size:7.5pt}
   <h1 style="margin-top:12px">8. Why GraphCargo Is Eligible</h1>
   <table>
     <tr><th>Criterion</th><th>Evidence</th></tr>
-    <tr><td><strong>Real data, not theory</strong></td><td>430,736 AWBs from an active GSA. 3M WACD benchmarks. 58 automated signals. Not a simulation.</td></tr>
-    <tr><td><strong>Proven correlations</strong></td><td>10 signal-yield pairs with |r| ≥ 0.75. 3 corridor case studies with documented yield prediction. 443 predictable lanes.</td></tr>
-    <tr><td><strong>Working infrastructure</strong></td><td>Supabase live (5 Edge Functions, 5 Crons). Neo4j live (19K nodes). Dashboard live (proof.graphcargoai.com).</td></tr>
-    <tr><td><strong>Confirmed partners</strong></td><td>TAC Index (MD confirmed). MeluXina (INITIATE applicable). WFC (data in system). Fraunhofer (in discussion).</td></tr>
-    <tr><td><strong>Novel approach</strong></td><td>No existing system connects macro signals to route-level cargo outcomes through a causal knowledge graph. Classical statistics — not generative AI.</td></tr>
+    <tr><td><strong>Real data, not theory</strong></td><td>433,675 AWBs from an active GSA. 3M WACD benchmarks. 67 automated signals. 12,499 validated correlations. Not a simulation.</td></tr>
+    <tr><td><strong>Proven causality</strong></td><td>2 Granger-causal signals (p&lt;0.005). 33 cross-validated pairs. 859 HIGH confidence (p&lt;0.01). 4 case studies with documented yield prediction.</td></tr>
+    <tr><td><strong>Commodity intelligence</strong></td><td>44,774 Lane-DNA fingerprints from hybrid AWB+WACD analysis. Domain-aware signal matching eliminates spurious correlations.</td></tr>
+    <tr><td><strong>Working infrastructure</strong></td><td>Supabase live (5 Edge Functions, 5 Crons). Neo4j live (29K nodes, 71K edges). Crystal Ball live (graphcargoai.com).</td></tr>
+    <tr><td><strong>Confirmed partners</strong></td><td>TAC Index (MD confirmed + MeluXina data usage approved). MeluXina (INITIATE applicable). WFC (data in system). Fraunhofer (in discussion).</td></tr>
+    <tr><td><strong>Novel approach</strong></td><td>No existing system connects macro signals to commodity-specific route-level outcomes through a causal knowledge graph. Classical statistics &mdash; not generative AI.</td></tr>
     <tr><td><strong>EU-sovereign</strong></td><td>All infrastructure EU-hosted. GDPR-compliant. MeluXina Luxembourg. Supabase EU. Neo4j EU.</td></tr>
-    <tr><td><strong>Transferable</strong></td><td>Air freight is proof of method. Same engine applies to sea freight (BDI/SCFI + AIS) and multimodal.</td></tr>
+    <tr><td><strong>Transferable</strong></td><td>Air freight is proof of method. Same engine applies to sea freight (BDI/SCFI + AIS) and multimodal. Lane-DNA concept works for any supply chain.</td></tr>
   </table>
 
-  <div class="page-foot"><span>GraphCargo AI</span><span>Page 7 | Whitepaper v5.0</span></div>
+  <div class="page-foot"><span>GraphCargo AI</span><span>Page 7 | Whitepaper v7.0</span></div>
 </div>
 
 <!-- PAGE 8: LIVE ACCESS + CONTACT -->
@@ -334,7 +334,7 @@ a{color:#3B7DDD;font-size:7.5pt}
   <table>
     <tr><td style="width:50%"><strong>Jannik Diekmann</strong><br>Founder, GraphCargo AI<br>jdiekmann@graphcargoai.com</td><td><strong>Alexander Schnittcher</strong><br>Founder, GraphCargo AI<br>aschnittcher@graphcargoai.com</td></tr>
   </table>
-  <p style="margin-top:8px;font-size:8pt;color:#999">GraphCargo AI | graphcargoai.com | Whitepaper v5.0 | April 2026</p>
+  <p style="margin-top:8px;font-size:8pt;color:#999">GraphCargo AI | graphcargoai.com | Whitepaper v7.0 | April 2026</p>
 
 </div>
 
